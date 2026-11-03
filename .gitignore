@@ -1,0 +1,33 @@
+# downloaded / generated data and weights (scripts/download_from_hf.py)
+/data/
+/hf_data/
+/structures/
+/processed_structures/
+/model/
+/train.list
+/val.list
+/test.list
+*.ckpt
+*.safetensors
+*.pt
+*.npz
+*.tar.gz
+# run outputs
+outputs/
+logger/
+checkpoints/
+best_ckpts/
+shift_history/
+err_history/
+wandb/
+predictions_*.json
+# python / editor
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+._*
+# not part of the repository (for now)
+/docs/
+/predict_test_bundle/
+/report_for_local_claude/

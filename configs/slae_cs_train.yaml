@@ -1,0 +1,35 @@
+# configs/slae_cs_train.yaml -- hydra config of slae_cs/train/chemical_shift_trainer.py (override with key=value)
+
+ckpt: ./autoencoder.ckpt                          # pretrained SLAE checkpoint (give on the command line)
+
+batch: 2
+epochs: 25
+workers: 4
+
+loss: huber                        # choices: huber, mse
+
+reinitenc: false                   # true = random encoder init instead of the checkpoint weights
+
+embed: residue_embedding           # choices: residue_embedding, node_embedding
+
+fraction: 1.0
+atom: N                            # choices: N, C, CA, CB, H, HA
+
+mask_json: null                    # reliability flags JSON (applied to val/test)
+tag_mask_csv: null                 # tag_labels.csv (applied to all splits); null = no tag mask
+
+lr: 5e-4                           # ShiftNet head (reported models: lr=3e-5 on the command line)
+lr_last: 3e-5                      # encoder (reported models: lr_last=3e-4 on the command line)
+
+run_name: baseline
+
+seed: 42
+
+# K-fold runs: per-fold JSONs and id lists (null = data/cs/{train,val,test}.json).
+# Declared here so hydra accepts a plain key=value override.
+train_json: null
+val_json: null
+test_json: null
+train_list: train.list
+val_list: val.list
+test_list: test.list

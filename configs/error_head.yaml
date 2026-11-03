@@ -1,0 +1,41 @@
+# configs/error_head.yaml -- hydra config of error_head/chemical_shift_trainer_justerr_oof_sorted.py and
+# error_head/infer_oof_abs_sorted.py (override with key=value; released settings: docs/reproduce.md)
+
+ckpt: ./autoencoder.ckpt                          # pretrained SLAE checkpoint (give on the command line)
+
+batch: 2
+epochs: 25
+workers: 4
+
+reinitenc: false                   # true = random encoder init instead of the checkpoint weights
+
+embed: residue_embedding           # choices: residue_embedding, node_embedding
+
+fraction: 1.0
+atom: N                            # choices: N, C, CA, CB, H, HA
+
+mask_json: null                    # reliability flags JSON (applied to val/test)
+tag_mask_csv: null                 # tag_labels.csv (applied to all splits); null = no tag mask
+
+lr_last: 3e-5                      # encoder lr (released model: lr_last=3e-4 on the command line)
+
+run_name: baseline
+
+# ---------- error head ----------
+predict_uncertainty: false         # must be true (the error head is the only output)
+uncertainty_mode: joint            # joint | finetune (finetune requires pretrained_cs_ckpt)
+mu_reg_weight: 1.0                 # weight of the Huber loss
+lr_err: 5e-4                       # error-head lr
+var_head_hidden: 256               # error-head width
+var_head_depth: 4                  # number of ResidualFF blocks of the error head
+predict_abs_error: false           # true = target |residual| (one-sided clamp) instead of the signed residual
+freeze_encoder: false              # true = encoder frozen and in eval(); only the error head trains
+train_max_abs_err: null            # train split only: drop residues with |residual| >= this from the loss
+apply_err_cap_to_eval: false       # true = apply the same cap to val/test (and checkpoint selection)
+pretrained_cs_ckpt: null           # trained SLAE-CS checkpoint to warm-start the encoder from
+oof_json: null                     # required: error-head input table (merge_oof_v3.py)
+detach_var_head_input: false       # true = no gradient from the error head into the encoder
+use_std_feature: false             # true = add the ensemble std ("N_std") as an input channel
+use_sorted_features: false         # true = add the 10 sorted, centred seed predictions ("N_sort00".."N_sort09")
+
+method: null                       # infer_oof_abs_sorted.py: tag in the output file name

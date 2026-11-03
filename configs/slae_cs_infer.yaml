@@ -1,0 +1,14 @@
+# configs/slae_cs_infer.yaml -- hydra config of slae_cs/inference/chemical_shift_predictor.py
+
+ckpt: ./autoencoder.ckpt                          # trained SLAE-CS weights: model.safetensors or .ckpt (give on the command line)
+
+batch: 2                           # ignored: inference always runs at batch size 1
+
+embed: residue_embedding           # choices: residue_embedding, node_embedding
+
+atom: N                            # choices: N, C, CA, CB, H, HA
+
+method: baseline                   # tag in the output name predictions_{atom}_{method}.json
+
+mask_json: null                    # optional reliability flags JSON
+tag_mask_csv: null                 # optional tag_labels.csv

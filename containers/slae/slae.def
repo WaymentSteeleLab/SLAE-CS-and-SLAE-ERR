@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+
+%labels
+    Author Cizhang Zhao
+    Description "SLAE PyTorch + PyG + Structural Biology Environment"
+
+%help
+    This container provides:
+    - Python 3.11
+    - PyTorch 2.6.0 with CUDA
+    - PyTorch Geometric
+    - Lightning, Hydra
+    - BioPython, Biotite, Atomworks
+
+%files
+    environment.yml /opt/environment.yml
+
+%post
+    echo "=== Creating workspace directory ==="
+    mkdir -p /workspace
+    chmod 777 /workspace
+
+    export TMPDIR=/var/tmp
+    mkdir -p $TMPDIR
+    chmod 1777 $TMPDIR
+
+    echo "=== Installing system dependencies ==="
+    apt-get update && apt-get install -y \
+        wget \
+        git \
+        build-essential \
+        pkg-config \
+        libcairo2-dev \
+        libglib2.0-dev \
+        libpango1.0-dev \
+        cmake \
+        libgl1 \
+        libglib2.0-0 \
+        && rm -rf /var/lib/apt/lists/*
+
+    echo "=== Installing Miniconda ==="
+    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+        -O /tmp/miniconda.sh
+    bash /tmp/miniconda.sh -b -p /opt/conda
+    rm /tmp/miniconda.sh
+
+    echo "=== Initializing conda ==="
+    /opt/conda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+    /opt/conda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
+    echo "=== Creating conda environment ==="
+    /opt/conda/bin/conda env create -f /opt/environment.yml
+
+    echo "=== Installing PyG CUDA wheels ==="
+    /opt/conda/bin/conda run -n slae pip install \
+        torch-scatter==2.1.2 torch-cluster==1.6.3 torch-sparse==0.6.18 torch-geometric==2.7.0 \
+        -f https://data.pyg.org/whl/torch-2.6.0+cu124.html
+
+    echo "=== Cleaning conda cache ==="
+    /opt/conda/bin/conda clean -a -y
+
+%environment
+    # Make conda available
+    export PATH=/opt/conda/bin:$PATH
+
+    source /opt/conda/etc/profile.d/conda.sh
+    conda activate slae
+
+    export WORKSPACE=/workspace
+    cd /workspace
+
+%runscript
+    cd /workspace
+    exec "$@"
