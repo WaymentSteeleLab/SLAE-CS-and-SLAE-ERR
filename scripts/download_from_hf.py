@@ -11,7 +11,7 @@ while the repositories are private, log in first (`hf auth login`, or set HF_TOK
                                      mirror, or a previous download) instead of downloading it
 
 Layout written under --dest (default: the repository root; run the scripts from there):
-    model/SLAE-CS-PANAV/seedNN/, model/SLAE-ERROR/      weights (hws-lab/SLAE-CS)
+    model/SLAE-CS-PANAV/seedNN/, model/SLAE-ERR/      weights (hws-lab/SLAE-CS)
     hf_data/rBMRB/...                                  the dataset as stored on Hugging Face
     autoencoder.ckpt                                   pretrained SLAE encoder (sha256 checked)
     data/cs/{train,val,test}.json, data/cs/tag_labels.csv, data/cs/<flags>.json, data/cs/<error table>.json

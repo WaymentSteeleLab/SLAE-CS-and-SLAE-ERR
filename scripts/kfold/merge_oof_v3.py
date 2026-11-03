@@ -86,7 +86,7 @@ def stats(preds, masks):
 
 
 def parse_args():
-    ap = argparse.ArgumentParser(description="Build the SLAE-ERROR input table from the SLAE-CS predictions.")
+    ap = argparse.ArgumentParser(description="Build the SLAE-ERR input table from the SLAE-CS predictions.")
     ap.add_argument("--data_dir", required=True, help="PANAV {train,val,test}.json and tag_labels.csv (data/cs)")
     ap.add_argument("--folds_dir", required=True, help="heldout_fold{k}.list (splits/kfold)")
     ap.add_argument("--kfold_pred_dir", required=True, help="predictions_N_panav_v3_kfold{f}_seed{s}.json")

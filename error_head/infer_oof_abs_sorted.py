@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-SLAE-ERROR inference on the test split with a trained chemical_shift_trainer_justerr_oof_sorted.py
+SLAE-ERR inference on the test split with a trained chemical_shift_trainer_justerr_oof_sorted.py
 checkpoint. The architecture options (predict_abs_error, use_std_feature, use_sorted_features,
 var_head_*) must be those used in training, or the checkpoint does not load (strict=True).
 Writes predictions_{atom}_{method}_err.json: predicted error ("pred"), residue mask ("mask"), and the
@@ -47,7 +47,7 @@ def cli(cfg: DictConfig):
     torch.use_deterministic_algorithms(True, warn_only=False)
 
     ckpt = Path(cfg.ckpt)                        # autoencoder.ckpt: builds the encoder (weights replaced below)
-    trained_ckpt = Path(cfg.trained_ckpt)        # the trained SLAE-ERROR checkpoint
+    trained_ckpt = Path(cfg.trained_ckpt)        # the trained SLAE-ERR checkpoint
     # always 1: with padding, ShiftNet's depth-wise conv (kernel 5, before any masking) mixes pad
     # vectors into the last 2 residues of the shorter protein, so predictions would depend on
     # batch composition

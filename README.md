@@ -1,14 +1,14 @@
 # SLAE-CS
 
 SLAE-CS predicts per-residue backbone ¹⁵N chemical shifts from protein structure, using the
-all-atom SLAE encoder with a regression head. SLAE-ERROR estimates the absolute error of
+all-atom SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of
 each prediction from the encoder embedding and the spread of the 10-seed SLAE-CS ensemble.
 
 This repository holds the training and inference code of the paper. Weights and data are on Hugging
 Face:
 
-- model weights: [`hws-lab/SLAE-CS`](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds, SLAE-ERROR; safetensors)
-- data: [`hws-lab/SLAE-CS-rBMRB`](https://huggingface.co/datasets/hws-lab/SLAE-CS-rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERROR training data)
+- model weights: [`hws-lab/SLAE-CS`](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds, SLAE-ERR; safetensors)
+- data: [`hws-lab/SLAE-CS-rBMRB`](https://huggingface.co/datasets/hws-lab/SLAE-CS-rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERR training data)
 
 ## Installation
 
@@ -38,7 +38,7 @@ pip install torch-scatter==2.1.2 torch-cluster==1.6.3 torch-sparse==0.6.18 torch
 
 ```bash
 python scripts/download_from_hf.py                       # weights, data, structures, pretrained encoder
-python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERROR --pdb my_protein.pdb --out my_protein
+python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERR --pdb my_protein.pdb --out my_protein
 ```
 
 - Download: `python scripts/download_from_hf.py --help` lists the options (`--scheme` for the LACS / BASELINE /
@@ -47,7 +47,7 @@ python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERROR -
 - Input: one protein per PDB file (a directory of PDB files also works). Only the first model of a
   multi-model file is used; split NMR ensembles with `scripts/inference_custom/split_nmr_models.py`.
 - Output: `my_protein.csv`, one row per residue with `N_mean` and `N_std` (mean and spread of the
-  10 seeds, ppm), `N_abs_error` (SLAE-ERROR), and the prediction of each seed; `my_protein.json` with
+  10 seeds, ppm), `N_abs_error` (SLAE-ERR), and the prediction of each seed; `my_protein.json` with
   the same values per protein. Prolines are left out (no amide N).
 - `--device auto|cuda|cpu` (default `auto`: the GPU if there is one); inference runs at batch size 1.
 
@@ -69,13 +69,13 @@ rounding only. It takes under a minute on a GPU. `predict.py` and the test also 
 Without a local GPU: `notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this
 test and predicts an uploaded structure.
 
-### Masked residues and SLAE-ERROR
+### Masked residues and SLAE-ERR
 
 In training and evaluation, two kinds of residues were masked: residues of affinity tags, protease
 cleavage sites and their flanks (labels `T` / `t` in `tag_labels.csv`, assigned from the sequence),
 and, on the validation and test sets, residues whose shift was flagged as unreliable during
 re-referencing. For SLAE-CS this only removes them from the loss and the scores; its predictions
-do not depend on the mask. For SLAE-ERROR it also changes the input: its ensemble features (the
+do not depend on the mask. For SLAE-ERR it also changes the input: its ensemble features (the
 spread and the sorted, centred predictions of the 10 seeds) were set to 0 on masked residues.
 
 TODO (to be released with the curation code):
@@ -84,7 +84,7 @@ TODO (to be released with the curation code):
   version labels a cleavage site next to a terminal His-tag `T` where the released
   `tag_labels_*.csv` have `t` (24 of 6,127 rBMRB entries); the masks, which keep only `A` / `P`,
   are identical.
-- a `--tag-labels` option for `predict.py` that applies the same mask to the SLAE-ERROR features.
+- a `--tag-labels` option for `predict.py` that applies the same mask to the SLAE-ERR features.
 
 TODO: documentation of training, inference on the benchmark splits and evaluation, and of the
 mapping from the Hugging Face files to the code paths (`docs/`).
@@ -93,13 +93,13 @@ mapping from the Hugging Face files to the code paths (`docs/`).
 
 | path | contents |
 |---|---|
-| `predict.py` | inference on new structures (SLAE-CS ensemble + SLAE-ERROR) |
+| `predict.py` | inference on new structures (SLAE-CS ensemble + SLAE-ERR) |
 | `examples/`, `tests/smoke_test.py` | three example structures with the reference output, and the test that compares them |
 | `notebooks/SLAE-CS_colab.ipynb` | install, test and prediction on a Google Colab GPU |
 | `slae_cs/` | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
-| `error_head/` | SLAE-ERROR training and inference, and the data helpers they use |
+| `error_head/` | SLAE-ERR training and inference, and the data helpers they use |
 | `configs/` | hydra configs of the training and inference scripts |
-| `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERROR table, ensemble merge, NMR helpers, train-size subsets |
+| `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, NMR helpers, train-size subsets |
 | `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | `SLAE/` | the parts of the SLAE package that SLAE-CS uses: encoder, featuriser, data loading (see "SLAE package") |
 | `containers/slae/` | definition, environment and package list of the runtime image |

@@ -2,7 +2,7 @@
 """Smoke test: run predict.py on the example structures and compare with the reference output.
 
     python tests/smoke_test.py [--quick] [--device auto|cuda|cpu] [--tol 1e-3]
-                               [--weights model/SLAE-CS-PANAV] [--error-model model/SLAE-ERROR]
+                               [--weights model/SLAE-CS-PANAV] [--error-model model/SLAE-ERR]
 
 Run it in the SLAE-CS environment (Apptainer image or conda, see README), from the repository root,
 after `python scripts/download_from_hf.py --no-data` (weights only).
@@ -38,7 +38,7 @@ def main():
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
     ap.add_argument("--tol", type=float, default=1e-3, help="largest allowed difference (ppm)")
     ap.add_argument("--weights", default=str(ROOT / "model" / "SLAE-CS-PANAV"))
-    ap.add_argument("--error-model", default=str(ROOT / "model" / "SLAE-ERROR"))
+    ap.add_argument("--error-model", default=str(ROOT / "model" / "SLAE-ERR"))
     a = ap.parse_args()
     for w in (a.weights, a.error_model):
         if not Path(w).exists():

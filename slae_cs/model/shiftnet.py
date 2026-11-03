@@ -1,4 +1,4 @@
-"""ShiftNet: the per-residue regression head of SLAE-CS (and of the SLAE-ERROR error head).
+"""ShiftNet: the per-residue regression head of SLAE-CS (and of the SLAE-ERR error head).
 
 The classes are those of SLAE/model/cs.py of the SLAE version used for the paper (code unchanged;
 the build checks it class by class); that file is not part of the public SLAE release. Input: residue embeddings [B, L, emb_dim] and a residue mask

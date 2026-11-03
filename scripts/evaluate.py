@@ -5,13 +5,13 @@ SLAE-CS (one or several per-seed prediction files of chemical_shift_predictor.py
 mean over seeds, on the mask of the first file):
     python scripts/evaluate.py cs --gt data/cs/test.json --pred predictions_N_seed*_test.json
 
-SLAE-ERROR (output of error_head/infer_oof_abs_sorted.py):
+SLAE-ERR (output of error_head/infer_oof_abs_sorted.py):
     python scripts/evaluate.py error --pred predictions_N_<tag>_err.json
 
 Protocol (SLAE-CS): ground-truth values that are missing or non-finite, and residues without the
 atom (N/H of proline, CB of glycine), are invalid; proteins without any valid value are skipped; a
 residue counts if it is valid in the ground truth and in the prediction mask (reliability flags +
-tag mask); RMSE / MAE over all such residues pooled. SLAE-ERROR: MAE |mu_err - |residual|| and
+tag mask); RMSE / MAE over all such residues pooled. SLAE-ERR: MAE |mu_err - |residual|| and
 Spearman over the residues of oof_mask.
 """
 import argparse

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """SLAE-CS: predict per-residue backbone 15N chemical shifts for protein structures,
-optionally with SLAE-ERROR estimates of the absolute error of each prediction.
+optionally with SLAE-ERR estimates of the absolute error of each prediction.
 
     python predict.py --weights model/SLAE-CS-PANAV --pdb my_protein.pdb --out pred
-    python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERROR --pdb structures/ --out pred
+    python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERR --pdb structures/ --out pred
 
 Input : one .pdb file or a directory of .pdb files. One protein per file; the first model of a
         multi-model file is used (split NMR ensembles first: scripts/inference_custom/split_nmr_models.py).
@@ -12,7 +12,7 @@ Output: <out>.csv   one row per residue: protein, index, chain, resnum, resname,
         <out>.json  {"seeds": [...], "pred": {protein: [n_seeds][L]}, "mask": ..., "mean": ..., "std": ...,
                      ["abs_error": ...]}
 
-SLAE-ERROR (--error-model) needs the 10-seed SLAE-CS ensemble: its inputs are the residue embedding
+SLAE-ERR (--error-model) needs the 10-seed SLAE-CS ensemble: its inputs are the residue embedding
 of its own encoder, the per-residue std over the 10 seeds and the 10 seed predictions sorted and
 centred on their mean (as in the training table, scripts/kfold/merge_oof_v3.py).
 
@@ -34,8 +34,8 @@ os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")   # deterministic cu
 HERE = Path(__file__).resolve().parent
 PAD_VALUE = 1e-5                                    # padding value of the residue embeddings (as in training)
 SHIFT_PRIOR = {"N": (100.0, 140.0, 119.0)}          # ppm window and output bias of the ShiftNet head
-ERR_WINDOW = 40.0                                   # N shift window; SLAE-ERROR output clamp = [0, ERR_WINDOW / 2]
-N_SEEDS_ERR = 10                                    # SLAE-ERROR was trained on 10-seed ensemble features
+ERR_WINDOW = 40.0                                   # N shift window; SLAE-ERR output clamp = [0, ERR_WINDOW / 2]
+N_SEEDS_ERR = 10                                    # SLAE-ERR was trained on 10-seed ensemble features
 
 
 def residues_from_pdb(path):
@@ -64,7 +64,7 @@ def weight_files(weights):
 
 
 def ensemble_features(P, mask):
-    """Inputs of SLAE-ERROR from the seed predictions, exactly as scripts/kfold/merge_oof_v3.py:
+    """Inputs of SLAE-ERR from the seed predictions, exactly as scripts/kfold/merge_oof_v3.py:
     P [n_seeds, L] float64, mask [L] bool -> std (ddof=1) [L] and sorted-centred [L, n_seeds], both
     float32, computed on the masked residues and 0.0 elsewhere."""
     import numpy as np
@@ -120,7 +120,7 @@ def build_models(slae_root):
             return self.model(x, mask), mask
 
     class SLAEError(nn.Module):
-        """SLAE-ERROR: its own SLAE encoder + ShiftNet error head (var_head) on
+        """SLAE-ERR: its own SLAE encoder + ShiftNet error head (var_head) on
         [embedding (128) | ensemble std (1) | 10 sorted, centred seed predictions (10)];
         output = predicted |error| (ppm), clamped to [0, 20]. Same submodule names
         (encoder.*, var_head.*) and forward as error_head/chemical_shift_trainer_justerr_oof_sorted.py."""
@@ -167,7 +167,7 @@ def load_batches(pdbs, tmp):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--weights", required=True, help="dir with seedNN/model.safetensors, or one model.safetensors")
-    ap.add_argument("--error-model", default=None, help="dir with the SLAE-ERROR model.safetensors (optional)")
+    ap.add_argument("--error-model", default=None, help="dir with the SLAE-ERR model.safetensors (optional)")
     ap.add_argument("--pdb", required=True, help="a .pdb file or a directory of .pdb files")
     ap.add_argument("--out", required=True, help="output prefix (writes <out>.csv and <out>.json)")
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"])
@@ -227,7 +227,7 @@ def main():
                     mu, _ = err(b.to(device), torch.from_numpy(std)[None].to(device),
                                 torch.from_numpy(srt)[None].to(device))
                     abs_error[pid] = mu[0].cpu().double()
-            print(f"SLAE-ERROR: {len(batches)} proteins")
+            print(f"SLAE-ERR: {len(batches)} proteins")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -265,7 +265,7 @@ def main():
                     *(["N_abs_error"] if abs_error else []), *seeds])
         w.writerows(rows)
     print(f"{len(preds)} proteins, {len(rows)} residues, {len(seeds)} seeds"
-          f"{' + SLAE-ERROR' if abs_error else ''} -> {args.out}.csv / {args.out}.json")
+          f"{' + SLAE-ERR' if abs_error else ''} -> {args.out}.csv / {args.out}.json")
     if missing:
         print(f"WARNING no prediction (structure could not be processed): {missing}")
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Train SLAE-ERROR: a per-residue 15N chemical-shift error regressor.
+Train SLAE-ERR: a per-residue 15N chemical-shift error regressor.
 
 Predicts the error of the external SLAE-CS 10-seed ensemble; it has no chemical-shift head of its own.
 
@@ -24,7 +24,7 @@ Predicts the error of the external SLAE-CS 10-seed ensemble; it has no chemical-
 - Checkpoints: top-3 by val epoch Huber loss; with +ckpt_by_spearman=true also top-3 by val epoch
   Spearman(mu_err, residual), which selected the released model.
 
-Run: see docs/reproduce.md, SLAE-ERROR.
+Run: see docs/reproduce.md, SLAE-ERR.
 """
 
 # ------------------------------------------------------------------ #
