@@ -31,3 +31,4 @@ __pycache__/
 /docs/
 /predict_test_bundle/
 /report_for_local_claude/
+/local_only/
