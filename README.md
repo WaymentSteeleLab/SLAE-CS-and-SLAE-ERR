@@ -1,4 +1,4 @@
-# SLAE-CS
+# SLAE-CS and SLAE-ERR
 
 SLAE-CS predicts per-residue backbone ¹⁵N chemical shifts from protein structure, using the
 all-atom SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of
@@ -66,8 +66,9 @@ and passes if every value agrees within 1e-3 ppm; other GPUs change the values b
 rounding only. It takes under a minute on a GPU. `predict.py` and the test also run on the CPU
 (`--device cpu`), more slowly.
 
-Without a local GPU: `notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this
-test and predicts an uploaded structure.
+Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+`notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this test and predicts an
+uploaded structure.
 
 ### Masked residues and SLAE-ERR
 
@@ -101,32 +102,14 @@ mapping from the Hugging Face files to the code paths (`docs/`).
 | `configs/` | hydra configs of the training and inference scripts |
 | `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, NMR helpers, train-size subsets |
 | `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
-| `SLAE/` | the parts of the SLAE package that SLAE-CS uses: encoder, featuriser, data loading (see "SLAE package") |
+| `SLAE/` | SLAE encoder code (see "SLAE") |
 | `containers/slae/` | definition, environment and package list of the runtime image |
 
-## SLAE package
+## SLAE
 
-`SLAE/` holds only the parts of SLAE (Chen et al.; `LICENSE-SLAE`) that SLAE-CS uses, taken from the
-SLAE version used for the paper:
-
-| part | files |
-|---|---|
-| encoder | `model/encoder.py`, `nn/` (Allegro layers, embeddings, radial basis, cutoffs, MLPs, transformer stack), `configs/encoder/protein_encoder.yaml` |
-| featuriser | `features/graph_featurizer.py`, `features/fa_representation.py` |
-| data loading | `datasets/` (`PDBDataModule`, dataset, data loader), `io/atom_tensor.py`; `model/decoder.py` (the dataset uses one of its constants) |
-| helpers | `util/` (`constants.py`, `avg_neighbor.py`, `types.py`, `_irrep_utils.py`) |
-
-
-- four files were modified for SLAE-CS, each marked at the top: `SLAE/__init__.py`,
-  `SLAE/model/__init__.py` and `SLAE/util/__init__.py` no longer import the modules left out, and
-  `SLAE/datasets/dataloader.py` collates the `Data` objects alone, as the public release does.
-
-The SLAE-CS prediction head `slae_cs/model/shiftnet.py` comes from `SLAE/model/cs.py` of the SLAE
-version used for the paper, which is not part of the public release.
-TODO: confirm its release and licence with the SLAE authors.
-
-The pretrained encoder weights (`autoencoder.ckpt`) come from the public SLAE repository and are
-checked by sha256 in `scripts/download_from_hf.py`.
+`SLAE/` contains code from [SLAE](https://github.com/ProteinDesignLab/SLAE) (Chen et al.), distributed under
+its licence (`LICENSE-SLAE`). The pretrained encoder weights (`autoencoder.ckpt`) are downloaded from the
+SLAE repository by `scripts/download_from_hf.py`.
 
 ## Citation
 
