@@ -1,4 +1,5 @@
-# configs/slae_cs_train.yaml -- hydra config of slae_cs/train/chemical_shift_trainer.py (override with key=value)
+# configs/slae_cs_train.yaml -- hydra config of slae_cs/train/chemical_shift_trainer.py (override with key=value).
+# The defaults are the settings of the released SLAE-CS models (docs/reproduce.md).
 
 ckpt: ./autoencoder.ckpt                          # pretrained SLAE checkpoint (give on the command line)
 
@@ -18,8 +19,8 @@ atom: N                            # choices: N, C, CA, CB, H, HA
 mask_json: null                    # reliability flags JSON (applied to val/test)
 tag_mask_csv: null                 # tag_labels.csv (applied to all splits); null = no tag mask
 
-lr: 5e-4                           # ShiftNet head (reported models: lr=3e-5 on the command line)
-lr_last: 3e-5                      # encoder (reported models: lr_last=3e-4 on the command line)
+lr: 3e-5                           # ShiftNet head
+lr_last: 3e-4                      # encoder
 
 run_name: baseline
 

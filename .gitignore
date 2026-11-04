@@ -28,7 +28,7 @@ __pycache__/
 .DS_Store
 ._*
 # not part of the repository (for now)
-/docs/
+/docs/data.md
 /predict_test_bundle/
 /report_for_local_claude/
 /local_only/

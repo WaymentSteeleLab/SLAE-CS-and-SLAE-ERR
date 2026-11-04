@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Residual targets and ensemble input features of the error head, read from the error-head input
-table (oof_json, written by merge_oof_v3.py). Used by chemical_shift_trainer_justerr_oof_sorted.py and
+table (oof_json, written by merge_oof.py). Used by chemical_shift_trainer_justerr_oof_sorted.py and
 infer_oof_abs_sorted.py.
 
 Why out-of-fold: a residual computed by a model on its own training ids (in-sample) is not an honest
@@ -131,7 +131,7 @@ def get_oof_std(oof_std_dict: Dict[str, torch.Tensor], pdb_ids, pad_masks: torch
 
 
 # ---------- input feature: the 10 seeds' predictions, sorted and centred ("N_sort00".."N_sort09") ---------- #
-# Sorted because the seeds are exchangeable (no meaningful fixed order); merge_oof_v3.py stores each
+# Sorted because the seeds are exchangeable (no meaningful fixed order); merge_oof.py stores each
 # sorted value minus the ensemble mean.
 SORTED_FIELDS = [f"N_sort{i:02d}" for i in range(10)]
 

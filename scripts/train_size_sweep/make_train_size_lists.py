@@ -4,13 +4,13 @@
 NESTED train_{10,20,...,90}.list for the train-size sweep.
 
 One fixed random.Random(1) shuffle of the full train.list, prefixes at each 10% step
--> train_10 ⊂ train_20 ⊂ ... ⊂ train_90 ⊂ train.list. Writes into --out (default: ./lists_v3/).
+-> train_10 ⊂ train_20 ⊂ ... ⊂ train_90 ⊂ train.list. Writes into --out. Run from the repository root;
+the outputs are identical to splits/train_size_sweep/.
 
-    # PANAV (also used by LACS / NOREF: same 4647 train ids)
-    python3 make_train_size_lists_v3.py --train ../PANAV/train.list --out lists_v3
-    # NOREF_whole (its own 12054-id train.list)
-    python3 make_train_size_lists_v3.py --train ../NOREF_whole/train.list \
-        --out ../NOREF_whole_train_size_sweep/lists_v3
+    # rBMRB (PANAV; also used by LACS and BASELINE: the same 4647 training ids)
+    python scripts/train_size_sweep/make_train_size_lists.py --train splits/panav/train.list --out <dir>
+    # whole BMRB (its own 12054 training ids)
+    python scripts/train_size_sweep/make_train_size_lists.py --train splits/whole_bmrb/train.list --out <dir>
 
 Refuses to overwrite an existing train_*.list in --out. Prints sizes and verifies nesting.
 """
@@ -19,10 +19,10 @@ import os
 import random
 import sys
 
-ap = argparse.ArgumentParser()
-ap.add_argument("--train", default="../PANAV/train.list")
-ap.add_argument("--out", default="lists_v3")
-ap.add_argument("--seed", type=int, default=1)
+ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+ap.add_argument("--train", required=True, help="full training id list, e.g. splits/panav/train.list")
+ap.add_argument("--out", required=True, help="output directory for train_{10..90}.list")
+ap.add_argument("--seed", type=int, default=1, help="shuffle seed (1 for the lists of the paper)")
 args = ap.parse_args()
 
 with open(args.train) as f:

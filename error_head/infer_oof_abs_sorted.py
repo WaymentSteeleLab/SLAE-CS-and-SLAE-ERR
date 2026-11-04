@@ -10,7 +10,7 @@ target residual with its mask ("oof_resid", "oof_mask"). Always runs at batch si
 Run:
     PYTHONPATH=$PWD python error_head/infer_oof_abs_sorted.py ckpt=$PWD/autoencoder.ckpt \
         +trained_ckpt=<model.safetensors or trained .ckpt> \
-        oof_json=<train_val_test_oof_ensemble_10seed_v3_N.json> mask_json=... tag_mask_csv=... \
+        oof_json=<train_val_test_oof_ensemble_10seed_N.json> mask_json=... tag_mask_csv=... \
         predict_abs_error=true use_std_feature=true use_sorted_features=true \
         uncertainty_mode=joint method=<tag>
 """

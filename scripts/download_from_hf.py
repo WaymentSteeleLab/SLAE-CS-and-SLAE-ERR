@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """Download the SLAE-CS weights and the rBMRB data from Hugging Face and lay them out where the code
-expects them (see docs/data.md for the mapping). Needs huggingface_hub (pip install -U huggingface_hub);
+expects them (layout below). Needs huggingface_hub (pip install -U huggingface_hub);
 while the repositories are private, log in first (`hf auth login`, or set HF_TOKEN).
 
     python scripts/download_from_hf.py [--revision REV] [--dest DIR] [--scheme PANAV|LACS|BASELINE|WHOLE]
@@ -32,8 +32,8 @@ MODEL_REPO = "hws-lab/SLAE-CS"
 DATA_REPO = "hws-lab/SLAE-CS-rBMRB"
 AE_URL = "https://media.githubusercontent.com/media/ProteinDesignLab/SLAE/078b94e/checkpoints/autoencoder.ckpt"
 AE_SHA256 = "ac5bf9613209fc310145e58f1aa7ddc9111d833a131488fe30ea738d51f7bb99"
-FLAGS = "bmrb_cs_data_withoffset_panav_v2_flags_only.json"
-ERR_TABLE = "train_val_test_oof_ensemble_10seed_v3_N.json"
+FLAGS = "bmrb_cs_data_withoffset_panav_flags_only.json"
+ERR_TABLE = "train_val_test_oof_ensemble_10seed_N.json"
 SCHEMES = ("PANAV", "LACS", "BASELINE", "WHOLE")
 REPO_ROOT = Path(__file__).resolve().parent.parent
 

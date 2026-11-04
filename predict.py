@@ -14,7 +14,7 @@ Output: <out>.csv   one row per residue: protein, index, chain, resnum, resname,
 
 SLAE-ERR (--error-model) needs the 10-seed SLAE-CS ensemble: its inputs are the residue embedding
 of its own encoder, the per-residue std over the 10 seeds and the 10 seed predictions sorted and
-centred on their mean (as in the training table, scripts/kfold/merge_oof_v3.py).
+centred on their mean (as in the training table, scripts/kfold/merge_oof.py).
 
 Needs the SLAE package (SLAE/ next to this file, or --slae_root) and its environment
 (containers/slae/). Inference runs at batch size 1, as in the paper.
@@ -64,7 +64,7 @@ def weight_files(weights):
 
 
 def ensemble_features(P, mask):
-    """Inputs of SLAE-ERR from the seed predictions, exactly as scripts/kfold/merge_oof_v3.py:
+    """Inputs of SLAE-ERR from the seed predictions, exactly as scripts/kfold/merge_oof.py:
     P [n_seeds, L] float64, mask [L] bool -> std (ddof=1) [L] and sorted-centred [L, n_seeds], both
     float32, computed on the masked residues and 0.0 elsewhere."""
     import numpy as np

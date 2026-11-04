@@ -6,7 +6,7 @@ True = unreliable) from one json in the {field: {row: value}} layout. The PANAV 
 carry the same fields, so the flags file is their union:
 
     python scripts/make_flags_json.py --splits data/cs/train.json data/cs/val.json data/cs/test.json \
-        --out data/cs/bmrb_cs_data_withoffset_panav_v2_flags_only.json
+        --out data/cs/bmrb_cs_data_withoffset_panav_flags_only.json
 
 The flags of the PANAV jsons are used for every referencing scheme (LACS and BASELINE models are
 evaluated on val/test with the same flags, as in the paper). After writing, the file is read back and

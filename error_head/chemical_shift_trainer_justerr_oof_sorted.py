@@ -7,7 +7,7 @@ Predicts the error of the external SLAE-CS 10-seed ensemble; it has no chemical-
 
 - Error head (`var_head`): a ShiftNet (input projection, depth-wise conv, TinyContext transformer,
   `depth` ResidualFF/GEGLU blocks, linear output) on the SLAE residue embedding, output mu_err.
-- Target: a precomputed residual per residue, read from cfg.oof_json (merge_oof_v3.py) for all three
+- Target: a precomputed residual per residue, read from cfg.oof_json (merge_oof.py) for all three
   splits: K-fold out-of-fold residuals for train, residuals of the 10 full-data models for val/test
   (see cs_oof_data.py). Loss: Huber, delta = 1.0.
 - predict_abs_error=true (released model): the target is |residual|; mu_err is clamped to
@@ -21,7 +21,7 @@ Predicts the error of the external SLAE-CS 10-seed ensemble; it has no chemical-
   lr_last, error-head lr = lr_err.
 - freeze_encoder=true: encoder requires_grad_(False) and kept in eval() (see train()); applied in
   cli() after the lazy-layer rebuild of model.encoder.
-- Checkpoints: top-3 by val epoch Huber loss; with +ckpt_by_spearman=true also top-3 by val epoch
+- Checkpoints: top-3 by val epoch Huber loss; with ckpt_by_spearman=true (default) also top-3 by val epoch
   Spearman(mu_err, residual), which selected the released model.
 
 Run: see docs/reproduce.md, SLAE-ERR.
@@ -456,7 +456,7 @@ def cli(cfg: DictConfig):
     use_std_feature = bool(cfg.get("use_std_feature", False))
     use_sorted_features = bool(cfg.get("use_sorted_features", False))
 
-    # required: the error-head input table (data/error_head/train_val_test_oof_ensemble_10seed_v3_N.json)
+    # required: the error-head input table (data/cs/train_val_test_oof_ensemble_10seed_N.json)
     oof_json = cfg.get("oof_json", None)
     assert predict_uncertainty and oof_json, \
         "chemical_shift_trainer_justerr_oof.py has no chemical-shift loss -- " \
@@ -599,7 +599,7 @@ def cli(cfg: DictConfig):
                                             metric="epoch_mu_reg_loss", mode="min",
                                             k=3, remove_old=False)
     topk_cbs = [topk_cb_muRegLoss]
-    # +ckpt_by_spearman=true: also top-3 by val epoch_mu_err_spearman (the released model was
+    # ckpt_by_spearman=true (default): also top-3 by val epoch_mu_err_spearman (the released model was
     # selected this way)
     if bool(cfg.get("ckpt_by_spearman", False)):
         topk_cbs.append(TopKSplitCheckpoint(dirpath=ckpt_dir, atom=atom,

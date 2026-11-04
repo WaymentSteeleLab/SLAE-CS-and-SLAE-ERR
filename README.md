@@ -10,6 +10,9 @@ Face:
 - model weights: [`hws-lab/SLAE-CS`](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds, SLAE-ERR; safetensors)
 - data: [`hws-lab/SLAE-CS-rBMRB`](https://huggingface.co/datasets/hws-lab/SLAE-CS-rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERR training data)
 
+Predict shifts for your own structures: [Quick start](#quick-start). Train the models and reproduce
+the paper: [docs/reproduce.md](docs/reproduce.md).
+
 ## Installation
 
 The results of the paper were produced in an Apptainer image built from `containers/slae/slae.def`
@@ -70,7 +73,7 @@ Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/
 `notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this test and predicts an
 uploaded structure.
 
-### Masked residues and SLAE-ERR
+### Masked residues and SLAE-ERR (TODO)
 
 In training and evaluation, two kinds of residues were masked: residues of affinity tags, protease
 cleavage sites and their flanks (labels `T` / `t` in `tag_labels.csv`, assigned from the sequence),
@@ -78,6 +81,9 @@ and, on the validation and test sets, residues whose shift was flagged as unreli
 re-referencing. For SLAE-CS this only removes them from the loss and the scores; its predictions
 do not depend on the mask. For SLAE-ERR it also changes the input: its ensemble features (the
 spread and the sorted, centred predictions of the 10 seeds) were set to 0 on masked residues.
+`predict.py` has no tag labels or flags for a new structure and computes these features on every
+residue. To reproduce the paper's SLAE-ERR predictions on the benchmark sets exactly, use
+`error_head/infer_oof_abs_sorted.py` ([docs/reproduce.md, SLAE-ERR test split](docs/reproduce.md#slae-err-test-split-benchmark-proteins-only)).
 
 TODO (to be released with the curation code):
 - tag labelling from sequence: `curation/assign_labels.py`, `relabel_tags(sequence)` → one label
@@ -87,8 +93,18 @@ TODO (to be released with the curation code):
   are identical.
 - a `--tag-labels` option for `predict.py` that applies the same mask to the SLAE-ERR features.
 
-TODO: documentation of training, inference on the benchmark splits and evaluation, and of the
-mapping from the Hugging Face files to the code paths (`docs/`).
+## Training and reproducing the paper
+
+[docs/reproduce.md](docs/reproduce.md) gives every command, in order, with the GPU time of each step:
+
+1. [Setup](docs/reproduce.md#0-setup): data, structures and the pretrained SLAE encoder.
+2. [SLAE-CS](docs/reproduce.md#1-slae-cs): the 10 full-data models and the train-size sweep.
+3. [SLAE-ERR](docs/reproduce.md#2-slae-err): K-fold models, out-of-fold predictions, the training table, and SLAE-ERR itself.
+4. [Inference](docs/reproduce.md#3-inference-with-the-released-weights) and
+   [evaluation](docs/reproduce.md#4-evaluation) on the benchmark splits, with the numbers of the paper.
+5. [Your own models with `predict.py`](docs/reproduce.md#5-using-your-own-models-with-predictpy): checkpoint conversion.
+
+The defaults of the hydra configs in `configs/` are the settings of the released models.
 
 ## Repository layout
 
@@ -99,8 +115,9 @@ mapping from the Hugging Face files to the code paths (`docs/`).
 | `notebooks/SLAE-CS_colab.ipynb` | install, test and prediction on a Google Colab GPU |
 | `slae_cs/` | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
 | `error_head/` | SLAE-ERR training and inference, and the data helpers they use |
-| `configs/` | hydra configs of the training and inference scripts |
-| `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, NMR helpers, train-size subsets |
+| `configs/` | hydra configs of the training and inference scripts (defaults: the released settings) |
+| `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
+| `docs/` | [reproduce.md](docs/reproduce.md): training, inference, evaluation |
 | `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | `SLAE/` | SLAE encoder code (see "SLAE") |
 | `containers/slae/` | definition, environment and package list of the runtime image |

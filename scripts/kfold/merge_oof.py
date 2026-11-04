@@ -20,11 +20,11 @@ Refuses to write anything if any check fails:
   * every prediction has exactly the sequence length (batch-1 inference, no padding);
   * every train/val/test protein in the PANAV jsons gets an entry.
 
-    python3 scripts/kfold/merge_oof_v3.py --data_dir data/cs --folds_dir splits/kfold \
+    python3 scripts/kfold/merge_oof.py --data_dir data/cs --folds_dir splits/kfold \
         --kfold_pred_dir <dir> --kfold_ckpt_list <fold,seed,ckpt list> \
         --val_pred_dir <dir> --val_ckpt_list <run_tag,ckpt list> \
         --test_pred_dir <dir> --test_ckpt_list <run_tag,ckpt list> \
-        --out data/cs/train_val_test_oof_ensemble_10seed_v3_N.json
+        --out data/cs/train_val_test_oof_ensemble_10seed_N.json
 """
 import argparse
 import json
@@ -89,7 +89,7 @@ def parse_args():
     ap = argparse.ArgumentParser(description="Build the SLAE-ERR input table from the SLAE-CS predictions.")
     ap.add_argument("--data_dir", required=True, help="PANAV {train,val,test}.json and tag_labels.csv (data/cs)")
     ap.add_argument("--folds_dir", required=True, help="heldout_fold{k}.list (splits/kfold)")
-    ap.add_argument("--kfold_pred_dir", required=True, help="predictions_N_panav_v3_kfold{f}_seed{s}.json")
+    ap.add_argument("--kfold_pred_dir", required=True, help="predictions_N_panav_kfold{f}_seed{s}.json")
     ap.add_argument("--kfold_ckpt_list", required=True, help="'fold,seed,ckpt_path' rows of the K-fold models")
     ap.add_argument("--val_pred_dir", required=True, help="predictions_N_<run_tag>_val.json of the 10 models")
     ap.add_argument("--val_ckpt_list", required=True, help="'run_tag,ckpt_path' rows of the 10 models (val)")
@@ -137,7 +137,7 @@ def main():
         held = [x.lower() for x in read_list(KFOLD / f"heldout_fold{f}.list")]
         srcs = []
         for s in SEEDS:
-            r = load_pred(KFOLD_PRED_DIR / f"predictions_N_panav_v3_kfold{f}_seed{s}.json", ck.get((f, s), "/dev/null"))
+            r = load_pred(KFOLD_PRED_DIR / f"predictions_N_panav_kfold{f}_seed{s}.json", ck.get((f, s), "/dev/null"))
             if r is None:
                 continue
             if {k.lower() for k in r[0]} != set(held):
