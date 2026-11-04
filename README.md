@@ -95,7 +95,7 @@ TODO (to be released with the curation code):
 
 ## Training and reproducing the paper
 
-[docs/reproduce.md](docs/reproduce.md) gives every command, in order, with the GPU time of each step:
+[docs/reproduce.md](docs/reproduce.md) gives every command with the GPU time of each step:
 
 1. [Setup](docs/reproduce.md#0-setup): data, structures and the pretrained SLAE encoder.
 2. [SLAE-CS](docs/reproduce.md#1-slae-cs): the 10 full-data models and the train-size sweep.
