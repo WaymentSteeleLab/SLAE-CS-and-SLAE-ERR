@@ -1,6 +1,6 @@
 # Data and external dependencies
 
-This page lists the data and third-party code used by the analysis notebooks, and where each file comes from. Neither is stored in this repository: the datasets are on Hugging Face and Zenodo, and third-party code is cloned. The commands below download everything into `data/` and `external/`. The rest of the page describes each dataset (sections 1–5), the external tools (section 6) and known caveats (Notes).
+This page lists the data and third-party code used by the analysis notebooks, and where each file comes from. Neither is stored in this repository: the datasets are on Hugging Face and [Zenodo](https://doi.org/10.5281/zenodo.24023681), and third-party code is cloned. The commands below download everything into `data/` and `external/`. The rest of the page describes each dataset (sections 1–5), the external tools (section 6) and known caveats (Notes).
 
 ```
 data/        datasets (not in git; download below)

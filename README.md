@@ -104,12 +104,12 @@ The defaults of the hydra configs in `configs/` are the settings of the released
 ## Figures
 
 [analysis/](analysis/README.md): the notebooks of every figure panel. [docs/figures.md](docs/figures.md) lists the code of each
-  panel and [analysis/DATA.md](analysis/DATA.md) the data. Data and third-party code:
+  panel and [analysis/DATA.md](analysis/DATA.md) the data. Data (Hugging Face and [Zenodo](https://doi.org/10.5281/zenodo.24023681)) and third-party code:
   `python scripts/download_analysis_data.py --parts figures` and `python scripts/setup_external.py`.
 
 ## rBMRB curation
 
-[curation/](curation/README.md): the notebooks that built the rBMRB dataset from a BMRB dump, step by step. Inputs:
+[curation/](curation/README.md): the notebooks that built the rBMRB dataset from a BMRB dump, step by step. Inputs ([Zenodo](https://doi.org/10.5281/zenodo.24023681)):
   `python scripts/download_analysis_data.py --parts curation`.
 
 ## Repository layout

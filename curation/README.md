@@ -4,7 +4,7 @@ The notebooks that built the SLAE-CS-rBMRB dataset from a BMRB dump: the entry f
 (PANAV, LACS, no re-referencing), the train / val / test split, the tag labels, and the larger training set
 from the whole BMRB used to train SLAE-CS. 
 
-The outputs of these notebooks are in the Hugging Face dataset (`hws-lab/SLAE-CS-rBMRB`); the inputs are on Zenodo (below).
+The outputs of these notebooks are in the Hugging Face dataset (`hws-lab/SLAE-CS-rBMRB`); the inputs are on [Zenodo](https://doi.org/10.5281/zenodo.24023681) (below).
 
 ## Layout
 
@@ -70,5 +70,5 @@ Counts as in the original run.
 
 ## Not in this folder
 
-- The AlphaFold2 models were predicted separately (see Methods); they are on Zenodo.
+- The AlphaFold2 models were predicted separately (see Methods); they are on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
 - K-fold folds: `scripts/kfold/make_kfold_splits.py` and `splits/kfold/`.

@@ -25,10 +25,11 @@ import os
 import shutil
 import sys
 import tarfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 
-ZENODO_RECORD = None   # set when the record is published
+ZENODO_RECORD = "24023681"   # https://doi.org/10.5281/zenodo.24023681
 DATA_REPO = "hws-lab/SLAE-CS-rBMRB"
 STRUCTURE_INDEX = "rBMRB/structures_rBMRB/index.csv"
 SCRIPTS = Path(__file__).resolve().parent
@@ -59,8 +60,13 @@ def fetch(name, a, tmp):
         url = f"https://zenodo.org/records/{record}/files/{name}?download=1"
         print(f"downloading {url}", flush=True)
         part = p.with_name(name + ".part")
-        with urllib.request.urlopen(url) as r, open(part, "wb") as fh:
-            shutil.copyfileobj(r, fh, 1 << 20)
+        try:
+            with urllib.request.urlopen(url) as r, open(part, "wb") as fh:
+                shutil.copyfileobj(r, fh, 1 << 20)
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 404):
+                sys.exit(f"{url}: HTTP {e.code}; the Zenodo record is not public yet: use --zenodo-dir")
+            raise
         part.rename(p)
     return p
 
