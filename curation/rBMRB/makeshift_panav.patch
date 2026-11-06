@@ -1,0 +1,162 @@
+diff --git a/makeshift/reref/panav.py b/makeshift/reref/panav.py
+index b51645f..d82dee2 100644
+--- a/makeshift/reref/panav.py
++++ b/makeshift/reref/panav.py
+@@ -8,9 +8,8 @@ change offsets).
+ 
+ As in PANAV.jar (not described in the papers), N reference distributions
+ for SS assignment and offsets depend on residue i and i-1
+-(panav_n_prev.csv); the deviant and suspicious flags use them too. N on
+-residues with unknown/missing i-1 is skipped there. CONA fragment scoring
+-keeps the per-residue N distributions.
++(panav_n_prev.csv). N on residues with unknown/missing i-1 is skipped there.
++CONA scoring keeps the per-residue N distributions.
+ """
+ 
+ import numpy as np
+@@ -243,80 +242,85 @@ def reref_panav(df, cona=True):
+ 
+     # CONA: score each 3–6-mer under every same-length window in the protein.
+     # Runs after offsets are final — skipping it does not change offsets.
+-    if not cona:
+-        return offsets, check, None
+-
+     cona_meta, suggestions = {}, []
+-    tot_sel = tot_conf = 0
+-    for k in (3, 4, 5, 6):
+-        windows = []
+-        for i in range(len(seq_ids) - k + 1):
+-            ids = seq_ids[i:i + k]
+-            if ids[-1] - ids[0] != k - 1:
+-                continue
+-            n_cacb = sum(
+-                ("CA" in cal[s]["shifts"]) + ("CB" in cal[s]["shifts"]) for s in ids
+-            )
+-            if n_cacb < k:
+-                continue
+-            aas = [cal[s]["aa"] for s in ids]
+-            shs = [cal[s]["shifts"] for s in ids]
+-            seq1 = "".join(_AA_3TO1.get(a, "X") for a in aas)
+-            windows.append((ids[0], ids[-1], aas, seq1, shs))
+-
+-        selected = confirmed = 0
+-        for oi, (start, end, _, seq_o, shs_o) in enumerate(windows):
+-            selected += 1
+-            scores = np.array([
+-                float(np.prod([_residue_prob(a, sh) for a, sh in zip(w[2], shs_o)]))
+-                for w in windows
+-            ])
+-            p_max = float(scores.max()) if len(scores) else 0.0
+-            j_best = int(np.argmax(scores)) if len(scores) else oi
+-            norm = scores / p_max if p_max > 0 else scores
+-            if float(norm[oi]) >= 1.0 - _CONA_TOL:
+-                confirmed += 1
+-            elif j_best != oi:
+-                suggestions.append({
+-                    "start": int(start),
+-                    "end": int(end),
+-                    "original": seq_o,
+-                    "original_pct": round(100.0 * float(norm[oi]), 2),
+-                    "suggested": windows[j_best][3],
+-                    "suggested_pct": 100.0,
+-                    "suggested_start": int(windows[j_best][0]),
+-                    "suggested_end": int(windows[j_best][1]),
+-                })
+-
+-        cona_meta[f"{k}-residue"] = {
+-            "selected": selected,
+-            "confirmed": confirmed,
+-            "score": (100.0 * confirmed / selected) if selected else None,
+-        }
+-        tot_sel += selected
+-        tot_conf += confirmed
++    if cona:
++        tot_sel = tot_conf = 0
++        for k in (3, 4, 5, 6):
++            windows = []
++            for i in range(len(seq_ids) - k + 1):
++                ids = seq_ids[i:i + k]
++                if ids[-1] - ids[0] != k - 1:
++                    continue
++                n_cacb = sum(
++                    ("CA" in cal[s]["shifts"]) + ("CB" in cal[s]["shifts"]) for s in ids
++                )
++                if n_cacb < k:
++                    continue
++                aas = [cal[s]["aa"] for s in ids]
++                shs = [cal[s]["shifts"] for s in ids]
++                seq1 = "".join(_AA_3TO1.get(a, "X") for a in aas)
++                windows.append((ids[0], ids[-1], aas, seq1, shs))
++
++            selected = confirmed = 0
++            for oi, (start, end, _, seq_o, shs_o) in enumerate(windows):
++                selected += 1
++                scores = np.array([
++                    float(np.prod([_residue_prob(a, sh) for a, sh in zip(w[2], shs_o)]))
++                    for w in windows
++                ])
++                p_max = float(scores.max()) if len(scores) else 0.0
++                j_best = int(np.argmax(scores)) if len(scores) else oi
++                norm = scores / p_max if p_max > 0 else scores
++                if float(norm[oi]) >= 1.0 - _CONA_TOL:
++                    confirmed += 1
++                elif j_best != oi:
++                    suggestions.append({
++                        "start": int(start),
++                        "end": int(end),
++                        "original": seq_o,
++                        "original_pct": round(100.0 * float(norm[oi]), 2),
++                        "suggested": windows[j_best][3],
++                        "suggested_pct": 100.0,
++                        "suggested_start": int(windows[j_best][0]),
++                        "suggested_end": int(windows[j_best][1]),
++                    })
++
++            cona_meta[f"{k}-residue"] = {
++                "selected": selected,
++                "confirmed": confirmed,
++                "score": (100.0 * confirmed / selected) if selected else None,
++            }
++            tot_sel += selected
++            tot_conf += confirmed
+ 
+     suspicious = []
+     for s in seq_ids:
+         aa, sh, ssi = cal[s]["aa"], cal[s]["shifts"], cal[s]["ss"]
+         if ssi is None:
+             continue
++
+         for atom, val in sh.items():
+-            if not _ok_atom(aa, prev_aa[s], atom):
++            if atom == "N" and _ok_n(aa, prev_aa[s]):
++                # Same i/i-1 N distributions as SS assignment, deviant and offsets
++                mu, sig = _dist(aa, prev_aa[s], ssi, "N")
++            elif _ok(aa, atom):
++                # Per-residue table; also the fallback for N when i-1 is unknown
++                mu, sig = _REF[aa][ssi][atom]
++            else:
+                 continue
+-            mu, sig = _dist(aa, prev_aa[s], ssi, atom)
+             if abs(val - mu) > 4 * sig:
+                 suspicious.append(
+                     {"seq_id": int(s), "aa": aa, "atom": atom, "val": val}
+                 )
+ 
+-    cona_meta["overall"] = {
+-        "selected": tot_sel,
+-        "confirmed": tot_conf,
+-        "score": (100.0 * tot_conf / tot_sel) if tot_sel else None,
+-    }
+-    if suggestions:
+-        cona_meta["suggestions"] = suggestions
++    if cona:
++        cona_meta["overall"] = {
++            "selected": tot_sel,
++            "confirmed": tot_conf,
++            "score": (100.0 * tot_conf / tot_sel) if tot_sel else None,
++        }
++        if suggestions:
++            cona_meta["suggestions"] = suggestions
+     if suspicious:
+         cona_meta["suspicious"] = suspicious
+     deviant_list = [

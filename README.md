@@ -73,7 +73,7 @@ Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/
 `notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this test and predicts an
 uploaded structure.
 
-### Masked residues and SLAE-ERR (TODO)
+### Masked residues and SLAE-ERR
 
 In training and evaluation, two kinds of residues were masked: residues of affinity tags, protease
 cleavage sites and their flanks (labels `T` / `t` in `tag_labels.csv`, assigned from the sequence),
@@ -85,13 +85,8 @@ spread and the sorted, centred predictions of the 10 seeds) were set to 0 on mas
 residue. To reproduce the paper's SLAE-ERR predictions on the benchmark sets exactly, use
 `error_head/infer_oof_abs_sorted.py` ([docs/reproduce.md, SLAE-ERR test split](docs/reproduce.md#slae-err-test-split-benchmark-proteins-only)).
 
-TODO (to be released with the curation code):
-- tag labelling from sequence: `curation/assign_labels.py`, `relabel_tags(sequence)` → one label
-  per residue (`A` standard, `P` proline, `T` tag / cleavage motif, `t` flank). The current
-  version labels a cleavage site next to a terminal His-tag `T` where the released
-  `tag_labels_*.csv` have `t` (24 of 6,127 rBMRB entries); the masks, which keep only `A` / `P`,
-  are identical.
-- a `--tag-labels` option for `predict.py` that applies the same mask to the SLAE-ERR features.
+Tags are labelled from the sequence by `curation/rBMRB/assign_labels.py`: `relabel_tags(sequence)` returns one
+label per residue (`A` standard, `P` proline, `T` tag / cleavage motif, `t` flank).
 
 ## Training and reproducing the paper
 
@@ -106,6 +101,17 @@ TODO (to be released with the curation code):
 
 The defaults of the hydra configs in `configs/` are the settings of the released models.
 
+## Figures
+
+[analysis/](analysis/README.md): the notebooks of every figure panel. [docs/figures.md](docs/figures.md) lists the code of each
+  panel and [analysis/DATA.md](analysis/DATA.md) the data. Data and third-party code:
+  `python scripts/download_analysis_data.py --parts figures` and `python scripts/setup_external.py`.
+
+## rBMRB curation
+
+[curation/](curation/README.md): the notebooks that built the rBMRB dataset from a BMRB dump, step by step. Inputs:
+  `python scripts/download_analysis_data.py --parts curation`.
+
 ## Repository layout
 
 | path | contents |
@@ -116,8 +122,10 @@ The defaults of the hydra configs in `configs/` are the settings of the released
 | `slae_cs/` | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
 | `error_head/` | SLAE-ERR training and inference, and the data helpers they use |
 | `configs/` | hydra configs of the training and inference scripts (defaults: the released settings) |
-| `scripts/` | download, flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
-| `docs/` | [reproduce.md](docs/reproduce.md): training, inference, evaluation |
+| `scripts/` | downloads (weights and data, analysis data, third-party code), flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
+| `docs/` | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
+| `analysis/` | figure notebooks and scripts, their data list and environment |
+| `curation/` | BMRB curation notebooks |
 | `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | `SLAE/` | SLAE encoder code (see "SLAE") |
 | `containers/slae/` | definition, environment and package list of the runtime image |

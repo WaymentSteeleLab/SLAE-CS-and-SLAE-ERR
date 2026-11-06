@@ -165,7 +165,7 @@ def load_batches(pdbs, tmp):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
+    ap = argparse.ArgumentParser(description=" ".join(__doc__.split("\n")[:2]))
     ap.add_argument("--weights", required=True, help="dir with seedNN/model.safetensors, or one model.safetensors")
     ap.add_argument("--error-model", default=None, help="dir with the SLAE-ERR model.safetensors (optional)")
     ap.add_argument("--pdb", required=True, help="a .pdb file or a directory of .pdb files")

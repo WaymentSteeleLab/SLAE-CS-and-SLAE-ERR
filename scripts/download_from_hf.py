@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """Download the SLAE-CS weights and the rBMRB data from Hugging Face and lay them out where the code
-expects them (layout below). Needs huggingface_hub (pip install -U huggingface_hub);
+expects them (layout below). Needs huggingface_hub (pip install huggingface-hub==0.36.0);
 while the repositories are private, log in first (`hf auth login`, or set HF_TOKEN).
 
     python scripts/download_from_hf.py [--revision REV] [--dest DIR] [--scheme PANAV|LACS|BASELINE|WHOLE]
@@ -13,12 +13,14 @@ while the repositories are private, log in first (`hf auth login`, or set HF_TOK
 Layout written under --dest (default: the repository root; run the scripts from there):
     model/SLAE-CS-PANAV/seedNN/, model/SLAE-ERR/      weights (hws-lab/SLAE-CS)
     hf_data/rBMRB/...                                  the dataset as stored on Hugging Face
+    data/structures/rBMRB/{train,val,test}/            structures unpacked from hf_data
     autoencoder.ckpt                                   pretrained SLAE encoder (sha256 checked)
     data/cs/{train,val,test}.json, data/cs/tag_labels.csv, data/cs/<flags>.json, data/cs/<error table>.json
     structures/<entry_ID>.pdb                          symlinks into hf_data
     {train,val,test}.list                              copied from splits/
 """
 import argparse
+import csv
 import hashlib
 import os
 import shutil
@@ -41,6 +43,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def link(src, dst):
     """ln -sfn: (re)point dst at src. Where symlinks are not allowed (Windows), files are copied."""
     dst = Path(dst)
+    if not Path(src).exists():
+        sys.exit(f"{src} not found")
     if dst.is_symlink() or dst.is_file():
         dst.unlink()
     elif dst.exists():
@@ -51,6 +55,14 @@ def link(src, dst):
         if Path(src).is_dir():
             raise
         shutil.copy2(src, dst)
+
+
+def extract(archive, out):
+    with tarfile.open(archive) as tf:
+        if hasattr(tarfile, "data_filter"):
+            tf.extractall(out, filter="data")
+        else:
+            tf.extractall(out)
 
 
 def sha256(path):
@@ -65,13 +77,13 @@ def snapshot(repo, repo_type, revision, local_dir, patterns=None):
     try:
         from huggingface_hub import snapshot_download
     except ImportError:
-        sys.exit("huggingface_hub is required: pip install -U huggingface_hub")
+        sys.exit("huggingface_hub is required: pip install huggingface-hub==0.36.0")
     snapshot_download(repo, repo_type=repo_type, revision=revision, local_dir=local_dir, allow_patterns=patterns)
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--revision", default="main", help="branch or tag of the Hugging Face repositories")
+    ap.add_argument("--revision", default="main", help="branch, tag or commit of the Hugging Face repositories (a commit hash exists in only one of the two: add --no-weights or --no-data)")
     ap.add_argument("--dest", type=Path, default=REPO_ROOT)
     ap.add_argument("--scheme", default="PANAV", choices=SCHEMES)
     ap.add_argument("--structures", default="train,val,test", help="splits whose structures to fetch")
@@ -110,12 +122,12 @@ def main():
     # ---------- dataset files needed for this scheme ---------- #
     R = "rBMRB"
     patterns = [f"{R}/rBMRB-PANAV/*.json", f"{R}/rBMRB-ERROR/*", f"{R}/tag_labels_*.csv",
-                f"{R}/structures_rBMRB/train_cluster/*"]
+                f"{R}/structures_rBMRB/train_cluster/*", f"{R}/structures_rBMRB/index.csv"]
     if a.scheme in ("LACS", "BASELINE"):
         patterns.append(f"{R}/rBMRB-{a.scheme}/*.json")
     elif a.scheme == "WHOLE":
         patterns += [f"{R}/whole_BMRB/*", f"{R}/structures_whole_BMRB_train/*"]
-    patterns += [f"{R}/structures_rBMRB/{s}/*" for s in splits]
+    patterns += [f"{R}/structures_rBMRB/{s}.tar.gz" for s in splits]
     if a.local_dataset:
         link(a.local_dataset.resolve(), dest / "hf_data")
     else:
@@ -149,19 +161,23 @@ def main():
     # ---------- structures/: one flat directory of <entry_ID>.pdb ---------- #
     st = dest / "structures"
     st.mkdir(exist_ok=True)
+    with open(H / "structures_rBMRB" / "index.csv") as fh:
+        index = list(csv.DictReader(fh))
     for s in splits:
-        for f in sorted((H / "structures_rBMRB" / s).glob("*.pdb")):
-            link(f, st / f.name)
+        X = dest / "data" / "structures" / "rBMRB" / s
+        X.mkdir(parents=True, exist_ok=True)
+        extract(H / "structures_rBMRB" / f"{s}.tar.gz", X)
+        names = {r["file"] for r in index if r["split"] == s}
+        if {f.name for f in X.glob("*.pdb")} != names:
+            sys.exit(f"{X}: files differ from structures_rBMRB/index.csv")
+        for name in sorted(names):
+            link(X / name, st / name)
     if a.scheme == "WHOLE":
         # the archives store bmr<id>.pdb; the code (and train.list) use <id>.pdb
         X = dest / "data" / "structures" / "whole_BMRB_train"
         X.mkdir(parents=True, exist_ok=True)
         for t in sorted((H / "structures_whole_BMRB_train").glob("part-*.tar.gz")):
-            with tarfile.open(t) as tf:
-                if hasattr(tarfile, "data_filter"):
-                    tf.extractall(X, filter="data")
-                else:
-                    tf.extractall(X)
+            extract(t, X)
         for f in sorted(X.rglob("*.pdb")):
             link(f, st / f.name.removeprefix("bmr"))
 

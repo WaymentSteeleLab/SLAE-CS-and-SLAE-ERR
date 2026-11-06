@@ -28,7 +28,19 @@ __pycache__/
 .DS_Store
 ._*
 # not part of the repository (for now)
-/docs/data.md
 /predict_test_bundle/
 /report_for_local_claude/
 /local_only/
+# analysis and curation: generated files and data (scripts/download_analysis_data.py)
+/external/
+/zenodo_download/
+Figs/
+/analysis/**/*.pml
+/analysis/**/*_bfactor.pdb
+/analysis/**/*_aligned.pdb
+/analysis/**/pdb_raw/
+/analysis/**/colorbar_vertical.*
+/analysis/**/*_tmscore.csv
+/analysis/SI/FigS1/random20_af2_structures/
+/analysis/SI/FigS22/11547_af2template/**/*.pdb
+/analysis/SI/FigS22/11547_af2template/**/*.json

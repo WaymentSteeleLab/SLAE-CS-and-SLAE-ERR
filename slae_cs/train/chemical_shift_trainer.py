@@ -14,7 +14,7 @@ Train SLAE-CS: a per-residue chemical-shift regressor (ShiftNet head) on the SLA
 Run from the repository root (hydra config configs/slae_cs_train.yaml; paths absolute, hydra changes
 the working directory), e.g.:
     PYTHONPATH=$PWD python slae_cs/train/chemical_shift_trainer.py ckpt=$PWD/autoencoder.ckpt mask_json=<flags.json> \
-        tag_mask_csv=<tag_labels.csv> seed=<s> lr=3e-5 lr_last=3e-4
+        tag_mask_csv=<tag_labels.csv> seed=<s>
 """
 
 # ------------------------------------------------------------------ #
