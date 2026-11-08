@@ -1,17 +1,55 @@
 # SLAE-CS and SLAE-ERR
 
-SLAE-CS predicts per-residue backbone ¹⁵N chemical shifts from protein structure, using the
-all-atom SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of
-each prediction from the encoder embedding and the spread of the 10-seed SLAE-CS ensemble.
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-yellow)](LICENSE)
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+[![Hugging Face model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SLAE--CS-blue)](https://huggingface.co/hws-lab/SLAE-CS)
+[![Hugging Face dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-rBMRB-blue)](https://huggingface.co/datasets/hws-lab/rBMRB)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24023681-blue)](https://doi.org/10.5281/zenodo.24023681)
 
-This repository holds the training and inference code of the paper. Weights and data are on Hugging
-Face:
+SLAE-CS and SLAE-ERR are the models of our paper "*Learning the limits of protein structure models with NMR chemical
+shifts*" (manuscript in preparation).
 
-- model weights: [`hws-lab/SLAE-CS`](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds, SLAE-ERR; safetensors)
-- data: [`hws-lab/rBMRB`](https://huggingface.co/datasets/hws-lab/rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERR training data)
+Given a protein structure, SLAE-CS predicts the backbone amide ¹⁵N chemical shift of each residue, using the all-atom
+SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of each prediction from the encoder
+embedding and the spread of the 10-seed SLAE-CS ensemble.
 
-Predict shifts for your own structures: [Quick start](#quick-start). Train the models and reproduce
-the paper: [docs/reproduce.md](docs/reproduce.md).
+- Model weights on 🤗 Hugging Face: [hws-lab/SLAE-CS](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds and SLAE-ERR).
+- Dataset on 🤗 Hugging Face: [hws-lab/rBMRB](https://huggingface.co/datasets/hws-lab/rBMRB), re-referenced BMRB ¹⁵N shifts
+  (PANAV, LACS and no re-referencing) with train / val / test splits, AlphaFold2 structures and the SLAE-ERR training data.
+- Data for the figures and the curation on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
+- A [Google Colab notebook](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+  that runs SLAE-CS without a local GPU.
+
+In this repository we provide:
+* [Installation](#installation)
+* [Inference on your own structures](#quick-start)
+* [Training code and how to reproduce the paper](#training-and-reproducing-the-paper)
+* [Figure notebooks](#figures)
+* [Baselines: ESM3, MACE-OFF23, ProteinMPNN](#baselines)
+* [Curation of the rBMRB dataset](#rbmrb-curation)
+* [Citation](#citation)
+
+If you have a question that is not covered here, please open an issue.
+
+## Repository layout
+
+| path | contents |
+|---|---|
+| [`predict.py`](predict.py) | inference on new structures (SLAE-CS ensemble + SLAE-ERR) |
+| [`examples/`](examples), [`tests/smoke_test.py`](tests/smoke_test.py) | three example structures with the reference output, and the test that compares them |
+| [`notebooks/SLAE-CS_colab.ipynb`](notebooks/SLAE-CS_colab.ipynb) | install, test and prediction on a Google Colab GPU |
+| [`slae_cs/`](slae_cs) | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
+| [`error_head/`](error_head) | SLAE-ERR training and inference, and the data helpers they use |
+| [`configs/`](configs) | hydra configs of the training and inference scripts (defaults: the released settings) |
+| [`scripts/`](scripts) | downloads (weights and data, analysis data, third-party code), flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
+| [`docs/`](docs) | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
+| [`analysis/`](analysis/README.md) | figure notebooks and scripts, their data list and environment |
+| [`curation/`](curation/README.md) | BMRB curation notebooks |
+| [`baselines/`](baselines/README.md) | encoder benchmark: ESM3, MACE-OFF23, ProteinMPNN |
+| [`splits/`](splits) | id lists of the splits, the 5 K-fold folds and the train-size subsets |
+| [`SLAE/`](SLAE) | SLAE encoder code (see [SLAE](#slae)) |
+| [`containers/slae/`](containers/slae) | definition, environment and package list of the runtime image |
 
 ## Installation
 
@@ -115,25 +153,6 @@ The defaults of the hydra configs in `configs/` are the settings of the released
 
 [curation/](curation/README.md): the notebooks that built the rBMRB dataset from a BMRB dump, step by step. Inputs ([Zenodo](https://doi.org/10.5281/zenodo.24023681)):
   `python scripts/download_analysis_data.py --parts curation`.
-
-## Repository layout
-
-| path | contents |
-|---|---|
-| `predict.py` | inference on new structures (SLAE-CS ensemble + SLAE-ERR) |
-| `examples/`, `tests/smoke_test.py` | three example structures with the reference output, and the test that compares them |
-| `notebooks/SLAE-CS_colab.ipynb` | install, test and prediction on a Google Colab GPU |
-| `slae_cs/` | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
-| `error_head/` | SLAE-ERR training and inference, and the data helpers they use |
-| `configs/` | hydra configs of the training and inference scripts (defaults: the released settings) |
-| `scripts/` | downloads (weights and data, analysis data, third-party code), flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
-| `docs/` | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
-| `analysis/` | figure notebooks and scripts, their data list and environment |
-| `curation/` | BMRB curation notebooks |
-| `baselines/` | encoder benchmark: ESM3, MACE-OFF23, ProteinMPNN |
-| `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
-| `SLAE/` | SLAE encoder code (see "SLAE") |
-| `containers/slae/` | definition, environment and package list of the runtime image |
 
 ## SLAE
 
