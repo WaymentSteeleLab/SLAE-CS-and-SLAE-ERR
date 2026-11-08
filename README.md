@@ -15,7 +15,7 @@ SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of ea
 embedding and the spread of the 10-seed SLAE-CS ensemble.
 
 - Model weights on 🤗 Hugging Face: [hws-lab/SLAE-CS](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds and SLAE-ERR).
-- Dataset on 🤗 Hugging Face: [hws-lab/rBMRB](https://huggingface.co/datasets/hws-lab/rBMRB), re-referenced BMRB ¹⁵N shifts
+- Dataset on 🤗 Hugging Face: [hws-lab/rBMRB](https://huggingface.co/datasets/hws-lab/rBMRB), re-referenced BMRB chemical shifts
   (PANAV, LACS and no re-referencing) with train / val / test splits, AlphaFold2 structures and the SLAE-ERR training data.
 - Data for the figures and the curation on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
 - A [Google Colab notebook](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
@@ -26,7 +26,7 @@ In this repository we provide:
 * [Inference on your own structures](#quick-start)
 * [Training code and how to reproduce the paper](#training-and-reproducing-the-paper)
 * [Figure notebooks](#figures)
-* [Baselines: ESM3, MACE-OFF23, ProteinMPNN](#baselines)
+* [Baselines](#baselines)
 * [Curation of the rBMRB dataset](#rbmrb-curation)
 * [Citation](#citation)
 
@@ -46,7 +46,7 @@ If you have a question that is not covered here, please open an issue.
 | [`docs/`](docs) | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
 | [`analysis/`](analysis/README.md) | figure notebooks and scripts, their data list and environment |
 | [`curation/`](curation/README.md) | BMRB curation notebooks |
-| [`baselines/`](baselines/README.md) | encoder benchmark: ESM3, MACE-OFF23, ProteinMPNN |
+| [`baselines/`](baselines/README.md) | baselines of the paper (ESM3, MACE-OFF23, ProteinMPNN) |
 | [`splits/`](splits) | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | [`SLAE/`](SLAE) | SLAE encoder code (see [SLAE](#slae)) |
 | [`containers/slae/`](containers/slae) | definition, environment and package list of the runtime image |
@@ -147,7 +147,7 @@ The defaults of the hydra configs in `configs/` are the settings of the released
 
 ## Baselines
 
-[baselines/](baselines/README.md): scripts and instructions of the encoder benchmark (ESM3, MACE-OFF23, ProteinMPNN).
+See [baselines/](baselines/README.md).
 
 ## rBMRB curation
 
