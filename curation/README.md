@@ -1,10 +1,10 @@
 # rBMRB curation
 
-The notebooks that built the SLAE-CS-rBMRB dataset from a BMRB dump: the entry filters, the re-referencing
+The notebooks that built the rBMRB dataset from a BMRB dump: the entry filters, the re-referencing
 (PANAV, LACS, no re-referencing), the train / val / test split, the tag labels, and the larger training set
 from the whole BMRB used to train SLAE-CS. 
 
-The outputs of these notebooks are in the Hugging Face dataset (`hws-lab/SLAE-CS-rBMRB`); the inputs are on [Zenodo](https://doi.org/10.5281/zenodo.24023681) (below).
+The outputs of these notebooks are in the Hugging Face dataset (`hws-lab/rBMRB`); the inputs are on [Zenodo](https://doi.org/10.5281/zenodo.24023681) (below).
 
 ## Layout
 
@@ -60,6 +60,11 @@ Counts as in the original run.
    `rBMRB/assign_labels.py`): tag labels of the whole-BMRB set.
 10. `rBMRB/assign_labels_panav.ipynb` (imports `rBMRB/assign_labels.py`): the tag label of each entry of the released
     split (sequence only) → `tag_labels.csv`.
+11. `rBMRB/train_cluster_noleak.ipynb`: the groups used for the K-fold split of the 4,647 training entries of step 7.
+    Entries are merged when they share a Foldseek cluster (`cluster_30p_old/result_cluster.tsv`), are homologous
+    (`cluster_30p/leak_filter/all_vs_all.m8` from step 7, same criteria) or have the same BMRB accession: **2,606** groups
+    (`cluster_30p/structures_split_filtered/train_cluster/result_cluster.tsv`). `scripts/kfold/make_kfold_splits.py`
+    keeps each group within one fold, so that no homolog links a held-out fold to its training folds.
 
 ## Tools
 

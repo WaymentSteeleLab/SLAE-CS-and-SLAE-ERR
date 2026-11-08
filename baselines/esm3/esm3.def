@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+
+%labels
+    Author Cizhang Zhao
+    Description "ESM3-open embedding extraction"
+
+%post
+    # esm pinned: 3.2.x reads weights from HF repo EvolutionaryScale/esm3-sm-open-v1
+    # (3.4+ switched to biohub/ and needs torch 2.11 + CUDA 13). httpx is imported
+    # by esm.sdk but missing from its declared deps.
+    pip install --no-cache-dir esm==3.2.1.post1 httpx biopython

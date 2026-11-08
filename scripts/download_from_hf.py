@@ -31,7 +31,7 @@ import urllib.request
 from pathlib import Path
 
 MODEL_REPO = "hws-lab/SLAE-CS"
-DATA_REPO = "hws-lab/SLAE-CS-rBMRB"
+DATA_REPO = "hws-lab/rBMRB"
 AE_URL = "https://media.githubusercontent.com/media/ProteinDesignLab/SLAE/078b94e/checkpoints/autoencoder.ckpt"
 AE_SHA256 = "ac5bf9613209fc310145e58f1aa7ddc9111d833a131488fe30ea738d51f7bb99"
 FLAGS = "bmrb_cs_data_withoffset_panav_flags_only.json"
@@ -87,7 +87,7 @@ def main():
     ap.add_argument("--dest", type=Path, default=REPO_ROOT)
     ap.add_argument("--scheme", default="PANAV", choices=SCHEMES)
     ap.add_argument("--structures", default="train,val,test", help="splits whose structures to fetch")
-    ap.add_argument("--no-weights", dest="weights", action="store_false")
+    ap.add_argument("--no-weights", dest="weights", action="store_false", help="skip the SLAE-CS weights (autoencoder.ckpt is still downloaded)")
     ap.add_argument("--no-data", dest="data", action="store_false")
     ap.add_argument("--local-model", type=Path)
     ap.add_argument("--local-dataset", type=Path)

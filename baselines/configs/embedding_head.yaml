@@ -1,0 +1,32 @@
+# hydra config of baselines/embedding_head/embedding_shift_trainer.py
+# Same training settings as configs/slae_cs_train.yaml (batch, epochs, loss, atom, seed, split files);
+# the encoder keys (ckpt, embed, reinitenc, lr_last, fraction) are dropped, embedding keys added.
+
+emb_npz: null                      # required: packed embeddings (pack_embeddings.py / pack_mace.py)
+emb_name: esm3                   # label only (run name / summary)
+
+batch: 2
+epochs: 25
+workers: 2
+
+loss: huber                        # choices: huber, mse
+analytic_centering: false          # as for SLAE-CS (all reported models: false)
+
+atom: N                            # choices: N, C, CA, CB, H, HA
+
+mask_json: null                    # required: flags JSON (val/test reliability mask)
+tag_mask_csv: null                 # tag/linker labels CSV; null = disabled
+
+lr: 1e-4                           # head LR (reported runs, on the command line: ESM3 3e-4, MACE-OFF23 3e-5)
+
+run_name: emb_baseline
+wandb_project: SLAE-CS
+seed: 42
+out_dir: null                      # default: <launch dir>/run_output
+
+train_json: null                   # default: <launch dir>/data/cs/{split}.json
+val_json: null
+test_json: null
+train_list: train.list
+val_list: val.list
+test_list: test.list

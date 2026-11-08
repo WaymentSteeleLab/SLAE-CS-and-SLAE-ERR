@@ -8,7 +8,7 @@ This repository holds the training and inference code of the paper. Weights and 
 Face:
 
 - model weights: [`hws-lab/SLAE-CS`](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds, SLAE-ERR; safetensors)
-- data: [`hws-lab/SLAE-CS-rBMRB`](https://huggingface.co/datasets/hws-lab/SLAE-CS-rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERR training data)
+- data: [`hws-lab/rBMRB`](https://huggingface.co/datasets/hws-lab/rBMRB) (re-referenced BMRB shifts, structures, SLAE-ERR training data)
 
 Predict shifts for your own structures: [Quick start](#quick-start). Train the models and reproduce
 the paper: [docs/reproduce.md](docs/reproduce.md).
@@ -20,7 +20,7 @@ The results of the paper were produced in an Apptainer image built from `contain
 package versions of that image are in `containers/slae/pip_list.txt`). Linux x86-64 with an NVIDIA
 driver for CUDA 12.4 is assumed; `predict.py` also runs on the CPU.
 
-**Apptainer** (building needs root; the image is about 9.4 GB):
+**Apptainer** (building needs root; the image is about 9.1 GB):
 ```bash
 cd containers/slae && sudo apptainer build slae.sif slae.def && cd ../..
 apptainer exec --nv containers/slae/slae.sif bash -c \
@@ -63,7 +63,7 @@ python tests/smoke_test.py                         # --quick: one protein only
 ```
 
 `examples/structures/` holds three small proteins of the PANAV test set (AlphaFold2 models from
-SLAE-CS-rBMRB, CC-BY-4.0) and `examples/expected/example_gpu.csv` the `predict.py` output for them in
+rBMRB, CC-BY-4.0) and `examples/expected/example_gpu.csv` the `predict.py` output for them in
 the environment of the paper on an NVIDIA A100. The test runs `predict.py` on the three structures
 and passes if every value agrees within 1e-3 ppm; other GPUs change the values by floating-point
 rounding only. It takes under a minute on a GPU. `predict.py` and the test also run on the CPU
@@ -107,6 +107,10 @@ The defaults of the hydra configs in `configs/` are the settings of the released
   panel and [analysis/DATA.md](analysis/DATA.md) the data. Data (Hugging Face and [Zenodo](https://doi.org/10.5281/zenodo.24023681)) and third-party code:
   `python scripts/download_analysis_data.py --parts figures` and `python scripts/setup_external.py`.
 
+## Baselines
+
+[baselines/](baselines/README.md): scripts and instructions of the encoder benchmark (ESM3, MACE-OFF23, ProteinMPNN).
+
 ## rBMRB curation
 
 [curation/](curation/README.md): the notebooks that built the rBMRB dataset from a BMRB dump, step by step. Inputs ([Zenodo](https://doi.org/10.5281/zenodo.24023681)):
@@ -126,6 +130,7 @@ The defaults of the hydra configs in `configs/` are the settings of the released
 | `docs/` | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
 | `analysis/` | figure notebooks and scripts, their data list and environment |
 | `curation/` | BMRB curation notebooks |
+| `baselines/` | encoder benchmark: ESM3, MACE-OFF23, ProteinMPNN |
 | `splits/` | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | `SLAE/` | SLAE encoder code (see "SLAE") |
 | `containers/slae/` | definition, environment and package list of the runtime image |

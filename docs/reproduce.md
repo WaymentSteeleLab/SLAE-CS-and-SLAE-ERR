@@ -21,6 +21,7 @@ predictions where they are started.
 Resources, measured on the cluster runs of the paper (30 GB RAM requested). Training ran on GPUs with 80 GB or
 more: SLAE-CS peaked at 60-82 GB, SLAE-ERR at up to 109 GB. A 40 GB GPU runs out of memory on batches of large
 proteins at batch size 2. Inference on the test set used up to about 39 GB.
+The PyTorch build of this environment does not run on NVIDIA Blackwell GPUs (`CUDA error: no kernel image is available`).
 
 | step | runs | GPU time |
 |---|---|---|
@@ -138,7 +139,7 @@ python error_head/infer_oof_abs_sorted.py hydra.run.dir=. ckpt=$CKPT0 \
   method=slae_err
 ```
 This reproduces the paper's SLAE-ERR predictions exactly; for the difference from `predict.py`, see
-[Masked residues and SLAE-ERR](../README.md#masked-residues-and-slae-err-todo).
+[Masked residues and SLAE-ERR](../README.md#masked-residues-and-slae-err).
 
 ### New structures
 See [Quick start](../README.md#quick-start). For NMR ensembles, use the helpers in `scripts/inference_custom/`:

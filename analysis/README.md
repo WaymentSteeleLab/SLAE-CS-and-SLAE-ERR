@@ -16,7 +16,7 @@ external/                      third-party code (not in git)
 ## Running
 
 1. Create the environment: `conda env create -f analysis/environment.yml && conda activate slae-cs-analysis`.
-   `mkdssp` and `huggingface-hub` come with it; `foldseek` must be on `PATH` for `shared/feature_pipeline/extract_foldseek_3di_af2.ipynb`.
+   `mkdssp` and `huggingface-hub` come with it; `foldseek` must be on `PATH` for `shared/feature_pipeline/extract_foldseek_3di_af2.ipynb` and `extract_3dn_per_residue.ipynb`.
 2. From the repository root: `python scripts/download_analysis_data.py --parts figures` and `python scripts/setup_external.py`.
 3. Open a notebook from its own folder (all paths are relative to the notebook). Figures are written to `Figs/` next to it.
 

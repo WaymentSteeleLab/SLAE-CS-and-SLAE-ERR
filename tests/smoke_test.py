@@ -7,7 +7,7 @@
 Run it in the SLAE-CS environment (Apptainer image or conda, see README), from the repository root,
 after `python scripts/download_from_hf.py --no-data` (weights only).
 examples/structures/ holds 3 small proteins of the PANAV test set (AlphaFold2 models from
-hws-lab/SLAE-CS-rBMRB); examples/expected/example_gpu.csv is the predict.py output for them in the
+hws-lab/rBMRB); examples/expected/example_gpu.csv is the predict.py output for them in the
 environment of the paper (slae.sif, NVIDIA A100). The test checks that the output has the same
 residues and columns, and that every value (N_mean, N_std, N_abs_error and the 10 seeds; written with
 4 decimals) agrees within --tol ppm. Other GPUs, and the CPU, change the values by floating-point

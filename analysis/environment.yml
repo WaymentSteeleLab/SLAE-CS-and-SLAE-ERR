@@ -1,4 +1,4 @@
-# Environment used to re-run every notebook in this repository (macOS, Python 3.11).
+# Environment used to re-run every notebook in this repository (tested on macOS and Linux, Python 3.11).
 #   conda env create -f environment.yml && conda activate slae-cs-analysis
 # External command-line tools (see DATA.md section 6): `mkdssp` (installed below)
 # and `foldseek` (download separately) must be on PATH.

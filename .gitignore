@@ -1,9 +1,9 @@
 # downloaded / generated data and weights (scripts/download_from_hf.py)
 /data/
-/hf_data/
+/hf_data
 /structures/
 /processed_structures/
-/model/
+/model
 /train.list
 /val.list
 /test.list
@@ -44,3 +44,17 @@ Figs/
 /analysis/SI/FigS1/random20_af2_structures/
 /analysis/SI/FigS22/11547_af2template/**/*.pdb
 /analysis/SI/FigS22/11547_af2template/**/*.json
+
+# working folders of docs/reproduce.md and baselines/README.md
+/runs/
+/oof/
+/preds/
+/lists/
+/my_models/
+/emb/
+/emb_chunks/
+/weights/
+/all_pdbs.txt
+.hydra/
+*.log
+*.sif

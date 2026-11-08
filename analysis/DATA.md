@@ -20,7 +20,7 @@ Each archive is checked against `scripts/zenodo_files.csv` before unpacking; `--
 
 | Short name | Source | Size (compressed / unpacked) | Contents |
 |---|---|---|---|
-| HF | Hugging Face dataset `hws-lab/SLAE-CS-rBMRB` | | split jsons, AF2 models of the 5,445 rBMRB entries (archives, unpacked), tag labels; linked from `hf_data/` as listed in `scripts/hf_data_map.csv` |
+| HF | Hugging Face dataset `hws-lab/rBMRB` | | split jsons, AF2 models of the 5,445 rBMRB entries (archives, unpacked), tag labels; linked from `hf_data/` as listed in `scripts/hf_data_map.csv` |
 | `analysis` | Zenodo `analysis_intermediates.tar.gz` | see `scripts/zenodo_files.csv` | `data/analysis/` (predictions, features, caches) and the inputs of SI Fig S22 |
 | `md` | Zenodo `md_1us_trajectories.tar.gz` | | `data/md_1us/` |
 | `processed` | Zenodo `rBMRB_processed.tar.gz` | | re-referenced BMRB tables in `data/rBMRB/` |

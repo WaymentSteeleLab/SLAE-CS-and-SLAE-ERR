@@ -13,7 +13,7 @@
     --verify         after unpacking, check the sha256 of every file against zenodo_inventory.csv.gz and the index of the HF structures
 
 Every archive is checked against scripts/zenodo_files.csv before it is unpacked at --dest (default: the repository
-root). Files that are also in the Hugging Face dataset (hws-lab/SLAE-CS-rBMRB) are not on Zenodo; they are linked from
+root). Files that are also in the Hugging Face dataset (hws-lab/rBMRB) are not on Zenodo; they are linked from
 hf_data/, or unpacked from its archives, as listed in scripts/hf_data_map.csv. Third-party code goes to external/
 (analysis/DATA.md).
 """
@@ -30,7 +30,7 @@ import urllib.request
 from pathlib import Path
 
 ZENODO_RECORD = "24023681"   # https://doi.org/10.5281/zenodo.24023681
-DATA_REPO = "hws-lab/SLAE-CS-rBMRB"
+DATA_REPO = "hws-lab/rBMRB"
 STRUCTURE_INDEX = "rBMRB/structures_rBMRB/index.csv"
 SCRIPTS = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPTS.parent
