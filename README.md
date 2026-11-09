@@ -2,7 +2,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-yellow)](LICENSE)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS-and-SLAE-ERR/blob/main/notebooks/SLAE-CS_colab.ipynb)
 [![Hugging Face model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SLAE--CS%20and%20SLAE--ERR-blue)](https://huggingface.co/hws-lab/SLAE-CS-and-SLAE-ERR)
 [![Hugging Face dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-rBMRB-blue)](https://huggingface.co/datasets/hws-lab/rBMRB)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24023681-blue)](https://doi.org/10.5281/zenodo.24023681)
@@ -18,7 +18,7 @@ embedding and the spread of the 10-seed SLAE-CS ensemble.
 - Dataset on 🤗 Hugging Face: [hws-lab/rBMRB](https://huggingface.co/datasets/hws-lab/rBMRB), re-referenced BMRB chemical shifts
   (PANAV, LACS and no re-referencing) with train / val / test splits, AlphaFold2 structures and the SLAE-ERR training data.
 - Data for the figures and the curation on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
-- A [Google Colab notebook](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+- A [Google Colab notebook](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS-and-SLAE-ERR/blob/main/notebooks/SLAE-CS_colab.ipynb)
   that runs SLAE-CS and SLAE-ERR without a local GPU.
 
 In this repository we provide:
@@ -110,7 +110,7 @@ and passes if every value agrees within 1e-3 ppm; other GPUs change the values b
 rounding only. It takes under a minute on a GPU. `predict.py` and the test also run on the CPU
 (`--device cpu`), more slowly.
 
-Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
+Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS-and-SLAE-ERR/blob/main/notebooks/SLAE-CS_colab.ipynb)
 `notebooks/SLAE-CS_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this test and predicts an
 uploaded structure.
 

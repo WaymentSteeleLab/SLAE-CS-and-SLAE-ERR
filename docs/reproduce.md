@@ -7,7 +7,7 @@ seeds and run names (`key=value`).
 ## 0. Setup
 
 ```bash
-git clone https://github.com/WaymentSteeleLab/SLAE-CS.git SLAE-CS && cd SLAE-CS
+git clone https://github.com/WaymentSteeleLab/SLAE-CS-and-SLAE-ERR.git SLAE-CS && cd SLAE-CS
 python scripts/download_from_hf.py                               # weights, PANAV data, structures, autoencoder.ckpt
 export R=$PWD PYTHONPATH=$PWD WANDB_MODE=offline
 export CKPT0=$R/autoencoder.ckpt TAG=$R/data/cs/tag_labels.csv \
