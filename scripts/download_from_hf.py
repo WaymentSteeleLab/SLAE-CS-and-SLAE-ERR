@@ -10,7 +10,7 @@ expects them (layout below). Needs huggingface_hub (pip install huggingface-hub=
                                      mirror, or a previous download) instead of downloading it
 
 Layout written under --dest (default: the repository root; run the scripts from there):
-    model/SLAE-CS-PANAV/seedNN/, model/SLAE-ERR/      weights (hws-lab/SLAE-CS)
+    model/SLAE-CS-PANAV/seedNN/, model/SLAE-ERR/      weights (hws-lab/SLAE-CS-and-SLAE-ERR)
     hf_data/rBMRB/...                                  the dataset as stored on Hugging Face
     data/structures/rBMRB/{train,val,test}/            structures unpacked from hf_data
     autoencoder.ckpt                                   pretrained SLAE encoder (sha256 checked)
@@ -29,7 +29,7 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
-MODEL_REPO = "hws-lab/SLAE-CS"
+MODEL_REPO = "hws-lab/SLAE-CS-and-SLAE-ERR"
 DATA_REPO = "hws-lab/rBMRB"
 AE_URL = "https://media.githubusercontent.com/media/ProteinDesignLab/SLAE/078b94e/checkpoints/autoencoder.ckpt"
 AE_SHA256 = "ac5bf9613209fc310145e58f1aa7ddc9111d833a131488fe30ea738d51f7bb99"

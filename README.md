@@ -3,7 +3,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-yellow)](LICENSE)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
-[![Hugging Face model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SLAE--CS-blue)](https://huggingface.co/hws-lab/SLAE-CS)
+[![Hugging Face model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SLAE--CS%20and%20SLAE--ERR-blue)](https://huggingface.co/hws-lab/SLAE-CS-and-SLAE-ERR)
 [![Hugging Face dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-rBMRB-blue)](https://huggingface.co/datasets/hws-lab/rBMRB)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24023681-blue)](https://doi.org/10.5281/zenodo.24023681)
 
@@ -14,7 +14,7 @@ Given a protein structure, SLAE-CS predicts the backbone amide ¹⁵N chemical s
 SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of each prediction from the encoder
 embedding and the spread of the 10-seed SLAE-CS ensemble.
 
-- Model weights on 🤗 Hugging Face: [hws-lab/SLAE-CS](https://huggingface.co/hws-lab/SLAE-CS) (10 SLAE-CS seeds and SLAE-ERR).
+- Model weights on 🤗 Hugging Face: [hws-lab/SLAE-CS-and-SLAE-ERR](https://huggingface.co/hws-lab/SLAE-CS-and-SLAE-ERR) (10 SLAE-CS seeds and SLAE-ERR).
 - Dataset on 🤗 Hugging Face: [hws-lab/rBMRB](https://huggingface.co/datasets/hws-lab/rBMRB), re-referenced BMRB chemical shifts
   (PANAV, LACS and no re-referencing) with train / val / test splits, AlphaFold2 structures and the SLAE-ERR training data.
 - Data for the figures and the curation on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
