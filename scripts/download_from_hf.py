@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """Download the SLAE-CS weights and the rBMRB data from Hugging Face and lay them out where the code
-expects them (layout below). Needs huggingface_hub (pip install huggingface-hub==0.36.0);
-while the repositories are private, log in first (`hf auth login`, or set HF_TOKEN).
+expects them (layout below). Needs huggingface_hub (pip install huggingface-hub==0.36.0).
 
     python scripts/download_from_hf.py [--revision REV] [--dest DIR] [--scheme PANAV|LACS|BASELINE|WHOLE]
                                        [--structures train,val,test] [--no-weights] [--no-data]
