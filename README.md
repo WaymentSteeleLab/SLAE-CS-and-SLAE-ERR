@@ -8,7 +8,7 @@
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24023681-blue)](https://doi.org/10.5281/zenodo.24023681)
 
 SLAE-CS and SLAE-ERR are the models of our paper "*Learning the limits of protein structure models with NMR chemical
-shifts*" (manuscript in preparation).
+shifts*".
 
 Given a protein structure, SLAE-CS predicts the backbone amide ¹⁵N chemical shift of each residue, using the all-atom
 SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of each prediction from the encoder
@@ -19,18 +19,22 @@ embedding and the spread of the 10-seed SLAE-CS ensemble.
   (PANAV, LACS and no re-referencing) with train / val / test splits, AlphaFold2 structures and the SLAE-ERR training data.
 - Data for the figures and the curation on [Zenodo](https://doi.org/10.5281/zenodo.24023681).
 - A [Google Colab notebook](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS/blob/main/notebooks/SLAE-CS_colab.ipynb)
-  that runs SLAE-CS without a local GPU.
+  that runs SLAE-CS and SLAE-ERR without a local GPU.
 
 In this repository we provide:
-* [Installation](#installation)
-* [Inference on your own structures](#quick-start)
-* [Training code and how to reproduce the paper](#training-and-reproducing-the-paper)
-* [Figure notebooks](#figures)
-* [Baselines](#baselines)
-* [Curation of the rBMRB dataset](#rbmrb-curation)
-* [Citation](#citation)
-
-If you have a question that is not covered here, please open an issue.
+- [SLAE-CS and SLAE-ERR](#slae-cs-and-slae-err)
+  - [Repository layout](#repository-layout)
+  - [Installation](#installation)
+  - [Quick start](#quick-start)
+    - [Test the installation](#test-the-installation)
+    - [Masked residues and SLAE-ERR](#masked-residues-and-slae-err)
+  - [Training](#training)
+  - [Figures](#figures)
+  - [Baselines](#baselines)
+  - [rBMRB curation](#rbmrb-curation)
+  - [SLAE](#slae)
+  - [Citation](#citation)
+  - [License](#license)
 
 ## Repository layout
 
@@ -39,13 +43,13 @@ If you have a question that is not covered here, please open an issue.
 | [`predict.py`](predict.py) | inference on new structures (SLAE-CS ensemble + SLAE-ERR) |
 | [`examples/`](examples), [`tests/smoke_test.py`](tests/smoke_test.py) | three example structures with the reference output, and the test that compares them |
 | [`notebooks/SLAE-CS_colab.ipynb`](notebooks/SLAE-CS_colab.ipynb) | install, test and prediction on a Google Colab GPU |
-| [`slae_cs/`](slae_cs) | ShiftNet (`model/shiftnet.py`), training (`train/`), inference on a structure set (`inference/`) |
+| [`slae_cs/`](slae_cs) | Training (`train/`), and inference on a structure set (`inference/`) |
 | [`error_head/`](error_head) | SLAE-ERR training and inference, and the data helpers they use |
 | [`configs/`](configs) | hydra configs of the training and inference scripts (defaults: the released settings) |
 | [`scripts/`](scripts) | downloads (weights and data, analysis data, third-party code), flags file, evaluation, K-fold splits and SLAE-ERR table, ensemble merge, checkpoint conversion, NMR helpers, train-size subsets |
 | [`docs/`](docs) | [reproduce.md](docs/reproduce.md): training, inference, evaluation; [figures.md](docs/figures.md): code of each figure panel |
 | [`analysis/`](analysis/README.md) | figure notebooks and scripts, their data list and environment |
-| [`curation/`](curation/README.md) | BMRB curation notebooks |
+| [`curation/`](curation/README.md) | rBMRB and whole BMRB curation notebooks |
 | [`baselines/`](baselines/README.md) | baselines of the paper (ESM3, MACE-OFF23, ProteinMPNN) |
 | [`splits/`](splits) | id lists of the splits, the 5 K-fold folds and the train-size subsets |
 | [`SLAE/`](SLAE) | SLAE encoder code (see [SLAE](#slae)) |
@@ -83,8 +87,7 @@ python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERR --p
 ```
 
 - Download: `python scripts/download_from_hf.py --help` lists the options (`--scheme` for the LACS / BASELINE /
-  whole-BMRB data, `--structures` to fetch only some splits, `--no-data` for the weights alone). While
-  the Hugging Face repositories are private, log in first with `hf auth login`.
+  whole-BMRB data, `--structures` to fetch only some splits, `--no-data` for the weights alone).
 - Input: one protein per PDB file (a directory of PDB files also works). Only the first model of a
   multi-model file is used; split NMR ensembles with `scripts/inference_custom/split_nmr_models.py`.
 - Output: `my_protein.csv`, one row per residue with `N_mean` and `N_std` (mean and spread of the
@@ -126,7 +129,7 @@ residue. To reproduce the paper's SLAE-ERR predictions on the benchmark sets exa
 Tags are labelled from the sequence by `curation/rBMRB/assign_labels.py`: `relabel_tags(sequence)` returns one
 label per residue (`A` standard, `P` proline, `T` tag / cleavage motif, `t` flank).
 
-## Training and reproducing the paper
+## Training
 
 [docs/reproduce.md](docs/reproduce.md) gives every command with the GPU time of each step:
 
