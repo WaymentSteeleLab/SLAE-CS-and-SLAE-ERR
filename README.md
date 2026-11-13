@@ -89,7 +89,8 @@ python predict.py --weights model/SLAE-CS-PANAV --error-model model/SLAE-ERR --p
 - Download: `python scripts/download_from_hf.py --help` lists the options (`--scheme` for the LACS / BASELINE /
   whole-BMRB data, `--structures` to fetch only some splits, `--no-data` for the weights alone).
 - Input: one protein per PDB file (a directory of PDB files also works). Only the first model of a
-  multi-model file is used; split NMR ensembles with `scripts/inference_custom/split_nmr_models.py`.
+  multi-model file is used; split NMR ensembles with `scripts/inference_custom/split_nmr_models.py`. Experimental structures (PDB or mmCIF) with ligands, waters or nucleic acids: clean them first with
+  `scripts/inference_custom/clean_structures.py` (needs `pip install gemmi`).
 - Output: `my_protein.csv`, one row per residue with `N_mean` and `N_std` (mean and spread of the
   10 seeds, ppm), `N_abs_error` (SLAE-ERR), and the prediction of each seed; `my_protein.json` with
   the same values per protein. Prolines are left out (no amide N).
