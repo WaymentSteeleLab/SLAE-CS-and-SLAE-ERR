@@ -176,11 +176,11 @@ If you use SLAE-CS, SLAE-ERR or rBMRB, please cite our paper and SLAE:
 }
 
 @misc{
-chen2026slae,
-title={{SLAE}:  Strictly Local All-atom Environment for Protein Representation},
-author={Yilin Chen and Tianyu Lu and Cizhang Zhao and Hannah Wayment-Steele and Po-Ssu Huang},
-year={2026},
-url={https://openreview.net/forum?id=EgPqKZHfVY}
+  chen2026slae,
+  title={{SLAE}:  Strictly Local All-atom Environment for Protein Representation},
+  author={Yilin Chen and Tianyu Lu and Cizhang Zhao and Hannah Wayment-Steele and Po-Ssu Huang},
+  year={2026},
+  url={https://openreview.net/forum?id=EgPqKZHfVY}
 }
 ```
 
