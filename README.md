@@ -111,8 +111,7 @@ rounding only. It takes under a minute on a GPU. `predict.py` and the test also 
 (`--device cpu`), more slowly.
 
 Without a local GPU: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/WaymentSteeleLab/SLAE-CS-and-SLAE-ERR/blob/main/notebooks/SLAE-CS_SLAE-ERR_colab.ipynb)
-`notebooks/SLAE-CS_SLAE-ERR_colab.ipynb` installs SLAE-CS on a Google Colab GPU, runs this test and predicts an
-uploaded structure.
+`notebooks/SLAE-CS_SLAE-ERR_colab.ipynb` installs SLAE-CS and SLAE-ERR on a Google Colab GPU, runs this test and predicts an uploaded structure.
 
 ### Masked residues and SLAE-ERR
 
@@ -165,7 +164,45 @@ SLAE repository by `scripts/download_from_hf.py`.
 
 ## Citation
 
-Please cite the SLAE-CS paper (citation to be added on publication) and SLAE.
+If you use SLAE-CS, SLAE-ERR or rBMRB, please cite our paper and SLAE:
+
+```bibtex
+@misc{zhao_learning_2026,
+	title = {Learning the limits of protein structure models with {NMR} chemical shifts},
+	author = {Zhao, Cizhang and El Nesr, Gina and Chen, Yilin and Wayment-Steele, Hannah K.},
+	publisher = {bioRxiv},
+	year = {2026},
+	note = {TODO: replace with the Zotero export once the preprint is online},
+}
+
+@misc{
+chen2026slae,
+title={{SLAE}:  Strictly Local All-atom Environment for Protein Representation},
+author={Yilin Chen and Tianyu Lu and Cizhang Zhao and Hannah Wayment-Steele and Po-Ssu Huang},
+year={2026},
+url={https://openreview.net/forum?id=EgPqKZHfVY}
+}
+```
+
+The data for the figures and the curation:
+
+```bibtex
+@dataset{zhao_2026_24023681,
+  author       = {Zhao, Cizhang and
+                  El Nesr, Gina and
+                  Chen, Yilin and
+                  Wayment-Steele, Hannah},
+  title        = {Data for "Learning the limits of protein structure
+                   models with NMR chemical shifts"
+                  },
+  month        = nov,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.24023681},
+  url          = {https://doi.org/10.5281/zenodo.24023681},
+}
+```
 
 ## License
 
