@@ -7,8 +7,8 @@
 [![Hugging Face dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-rBMRB-blue)](https://huggingface.co/datasets/hws-lab/rBMRB)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24023681-blue)](https://doi.org/10.5281/zenodo.24023681)
 
-SLAE-CS and SLAE-ERR are the models of our paper "*Learning the limits of protein structure models with NMR chemical
-shifts*".
+SLAE-CS and SLAE-ERR are the models of our paper "[*Learning the limits of protein structure models with NMR chemical
+shifts*](https://doi.org/10.64898/2026.11.12.766294)" (bioRxiv, 2026).
 
 Given a protein structure, SLAE-CS predicts the backbone amide ¹⁵N chemical shift of each residue, using the all-atom
 SLAE encoder with a regression head. SLAE-ERR estimates the absolute error of each prediction from the encoder
@@ -172,8 +172,10 @@ If you use SLAE-CS, SLAE-ERR or rBMRB, please cite our paper and SLAE:
 	title = {Learning the limits of protein structure models with {NMR} chemical shifts},
 	author = {Zhao, Cizhang and El Nesr, Gina and Chen, Yilin and Wayment-Steele, Hannah K.},
 	publisher = {bioRxiv},
+	doi = {10.64898/2026.11.12.766294},
+	url = {https://www.biorxiv.org/content/10.64898/2026.11.12.766294v1},
+	month = nov,
 	year = {2026},
-	note = {TODO: replace with the Zotero export once the preprint is online},
 }
 
 @misc{
